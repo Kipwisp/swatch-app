@@ -32,9 +32,6 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "NavBar",
-  props: {
-    currentPage: String,
-  },
 });
 </script>
 

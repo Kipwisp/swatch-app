@@ -32,7 +32,10 @@ body {
   height: 100vh;
   margin: 0;
 }
-
+.no-background {
+  background-color: rgba(0, 0, 0, 0);
+  border: None;
+}
 #nav {
   padding: 30px;
 

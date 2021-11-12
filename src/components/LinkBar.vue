@@ -1,7 +1,7 @@
 <template>
   <div class="bar">
     <input v-model="link" placeholder="Enter link to image here..." />
-    <ToolTip text="Paste from Clipboard">
+    <ToolTip text="Paste">
       <button class="no-background icon">
         <unicon name="clipboard" fill="#37425f" hover-fill="white"></unicon>
       </button>

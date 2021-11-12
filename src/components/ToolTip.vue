@@ -26,28 +26,29 @@ export default {
 
 .tooltip-box:hover .tooltip {
   opacity: 1;
-  transition-delay: 1s;
+  transition-delay: 0.5s;
 }
 
 .tooltip {
+  user-select: none;
   color: #ffffff;
   text-align: center;
-  padding: 5px 0;
+  padding: 10px;
   border-radius: 5px;
+  font-size: 1em;
 
-  width: 120px;
   bottom: 100%;
-  left: 50%;
-  margin-left: -60px;
   margin-bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
 
   opacity: 0;
-  transition: opacity 1s;
+  transition: opacity 0.2s;
 
   position: absolute;
   z-index: 1;
 
-  background: #202630;
+  background: #11141a;
 }
 
 .text::after {
@@ -59,6 +60,6 @@ export default {
   margin-bottom: 10px;
   border-width: 5px;
   border-style: solid;
-  border-color: #82a2e8 transparent transparent transparent;
+  border-color: #11141a transparent transparent transparent;
 }
 </style>

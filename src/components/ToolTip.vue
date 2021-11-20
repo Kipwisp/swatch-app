@@ -18,7 +18,8 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import "@/assets/css/styles.scss";
 .tooltip-box {
   position: relative;
   display: inline-block;
@@ -31,7 +32,7 @@ export default {
 
 .tooltip {
   user-select: none;
-  color: #ffffff;
+  color: white;
   text-align: center;
   padding: 10px;
   border-radius: 5px;
@@ -48,7 +49,7 @@ export default {
   position: absolute;
   z-index: 1;
 
-  background: #11141a;
+  background: var(--tooltip);
 }
 
 .text::after {
@@ -60,6 +61,6 @@ export default {
   margin-bottom: 10px;
   border-width: 5px;
   border-style: solid;
-  border-color: #11141a transparent transparent transparent;
+  border-color: var(--tooltip) transparent transparent transparent;
 }
 </style>

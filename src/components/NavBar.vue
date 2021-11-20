@@ -36,13 +36,14 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
+@import "@/assets/css/styles.scss";
 .navbar {
-  background-color: #2b3877;
+  background-color: var(--main);
 }
 .nav-link a {
-  color: #7b7ba7;
+  color: var(--accent-3);
   text-decoration: None;
-  transition: color 0.5s;
+  transition: color 0.2s;
 }
 .nav-link a:hover {
   color: white;

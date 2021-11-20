@@ -16,6 +16,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+@import "@/assets/css/styles.scss";
 body {
   margin: 0;
 }
@@ -26,7 +27,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  background-color: #141920;
+  background-color: var(--main-bg);
   color: white;
   width: 100vw;
   height: 100vh;

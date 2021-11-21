@@ -1,13 +1,22 @@
 <template>
   <div class="bar">
-    <input v-model="link" placeholder="Enter link to image here..." />
+    <form class="inputbar" enctype="multipart/form-data">
+      <input
+        class="inputbar"
+        v-model="link"
+        placeholder="Enter link to image here..."
+      />
+    </form>
     <ToolTip text="Paste">
-      <button class="no-background icon">
-        <unicon name="clipboard" fill="#37425f" hover-fill="white"></unicon>
+      <button v-on:click="paste" class="no-background icon">
+        <unicon
+          name="clipboard"
+          fill="var(--accent-1)"
+          hover-fill="white"
+        ></unicon>
       </button>
     </ToolTip>
   </div>
-  {{ link }}
 </template>
 
 <script lang="ts">
@@ -16,14 +25,25 @@ import ToolTip from "./ToolTip.vue";
 
 export default defineComponent({
   name: "LinkBar",
+  data() {
+    return {
+      link: "",
+    };
+  },
   components: {
     ToolTip,
+  },
+  methods: {
+    async paste() {
+      this.link = await navigator.clipboard.readText();
+    },
   },
 });
 </script>
 
 <style scoped lang="scss">
-input {
+@import "@/assets/css/styles.scss";
+.inputbar {
   color: white;
   background-color: rgba(0, 0, 0, 0);
   border: None;
@@ -33,19 +53,19 @@ input:focus {
   outline: None;
 }
 input::placeholder {
-  color: #37425f;
+  color: var(--accent-1);
 }
 .bar {
   flex: 1;
   display: flex;
   justify-content: space-between;
   max-width: 50em;
-  border: 2px #37425f solid;
+  border: 2px var(--accent-1) solid;
   border-radius: 25px;
   padding: 10px 40px;
-  transition: 0.5s;
+  transition: 0.2s;
 }
 .bar:hover {
-  background-color: #232733;
+  background-color: var(--accent-2);
 }
 </style>

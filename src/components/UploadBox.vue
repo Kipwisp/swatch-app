@@ -43,10 +43,8 @@ export default defineComponent({
   },
   methods: {
     uploadImage(event: Event) {
-      let data = new FormData();
       let file = (event.target as HTMLInputElement).files?.[0];
-      console.log(file);
-      this.isOver = false;
+      this.$emit("submit-image", file);
     },
   },
 });

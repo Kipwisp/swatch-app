@@ -2,18 +2,21 @@
   <div class="about">
     <Processing />
   </div>
-  <Chart />
+  <ColorProportions />
+  <DominantColors />
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
 import Processing from "@/components/Processing.vue";
-import Chart from "@/components/Chart.vue";
+import ColorProportions from "@/components/ColorProportions.vue";
+import DominantColors from "@/components/DominantColors.vue";
 
 export default defineComponent({
   name: "About",
   components: {
     Processing,
-    Chart,
+    ColorProportions,
+    DominantColors,
   },
 });
 </script>

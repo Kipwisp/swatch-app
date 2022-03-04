@@ -27,6 +27,7 @@ export default {
 
 .tooltip-box:hover .tooltip {
   opacity: 1;
+  visibility: visible;
   transition-delay: 0.5s;
 }
 
@@ -44,7 +45,8 @@ export default {
   transform: translateX(-50%);
 
   opacity: 0;
-  transition: opacity 0.2s;
+  visibility: hidden;
+  transition: opacity 0.2s, visibility 0.2s;
 
   position: absolute;
   z-index: 1;

@@ -3,20 +3,17 @@
     <Processing />
   </div>
   <ColorProportions />
-  <DominantColors />
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
 import Processing from "@/components/Processing.vue";
 import ColorProportions from "@/components/ColorProportions.vue";
-import DominantColors from "@/components/DominantColors.vue";
 
 export default defineComponent({
   name: "About",
   components: {
     Processing,
     ColorProportions,
-    DominantColors,
   },
 });
 </script>

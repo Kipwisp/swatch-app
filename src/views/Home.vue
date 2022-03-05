@@ -15,9 +15,14 @@
           <ColorProportions v-bind:data="results.color_proportion" />
         </template>
       </Card>
-      <Card v-if="results" title="Dominant Colors">
+      <Card v-if="results" title="Color Palette">
         <template v-slot:component>
-          <DominantColors v-bind:data="results.dominant_colors" />
+          <ColorPalette v-bind:data="results.color_palette" />
+        </template>
+      </Card>
+      <Card v-if="results" title="Value Distribution">
+        <template v-slot:component>
+          <ValueDistribution v-bind:data="results.value_distribution" />
         </template>
       </Card>
     </div>
@@ -30,7 +35,8 @@ import UploadBox from "@/components/UploadBox.vue";
 import LinkBar from "@/components/LinkBar.vue";
 import Processing from "@/components/Processing.vue";
 import ColorProportions from "@/components/ColorProportions.vue";
-import DominantColors from "@/components/DominantColors.vue";
+import ColorPalette from "@/components/ColorPalette.vue";
+import ValueDistribution from "@/components/ValueDistribution.vue";
 import Card from "@/components/Card.vue";
 
 export default defineComponent({
@@ -40,7 +46,8 @@ export default defineComponent({
     LinkBar,
     Processing,
     ColorProportions,
-    DominantColors,
+    ColorPalette,
+    ValueDistribution,
     Card,
   },
   data: () => {

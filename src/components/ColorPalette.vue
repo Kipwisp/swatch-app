@@ -16,7 +16,7 @@
 import { defineComponent } from "vue";
 
 export default defineComponent({
-  name: "DominantColors",
+  name: "ColorPalette",
   props: {
     data: Object,
   },
@@ -33,16 +33,16 @@ export default defineComponent({
 .color {
   padding: 10px 150px;
   margin-bottom: 10px;
-  font-size: 1.2em;
+  font-size: 1em;
   border-radius: 15px;
   text-shadow: 2px 2px #000;
 }
 a {
   color: white;
-  text-decoration: none; /* no underline */
+  text-decoration: none;
 }
 a:hover {
   color: rgb(224, 224, 224);
-  text-decoration: none; /* no underline */
+  text-decoration: none;
 }
 </style>

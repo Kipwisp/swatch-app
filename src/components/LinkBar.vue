@@ -1,6 +1,10 @@
 <template>
   <div class="bar">
-    <form class="inputbar" enctype="multipart/form-data">
+    <form
+      class="inputbar"
+      enctype="multipart/form-data"
+      v-on:submit.prevent="uploadImage"
+    >
       <input
         class="inputbar"
         v-model="link"
@@ -36,6 +40,16 @@ export default defineComponent({
   methods: {
     async paste() {
       this.link = await navigator.clipboard.readText();
+      this.uploadImage();
+    },
+    async uploadImage() {
+      const response = await fetch(this.link);
+      console.log(response);
+
+      if (response.ok) {
+        const blob = await response.blob();
+        this.$emit("submit-image", blob);
+      }
     },
   },
 });

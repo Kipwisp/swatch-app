@@ -176,6 +176,7 @@ export default defineComponent({
   font-size: 1.6em;
 }
 .chart ::v-deep(.tooltip) {
+  position: fixed;
   background-color: var(--tooltip);
   border-radius: 5px;
   padding: 10px;

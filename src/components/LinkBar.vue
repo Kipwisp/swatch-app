@@ -48,7 +48,12 @@ export default defineComponent({
         const response = await fetch(this.link);
         if (response && response.ok) {
           const blob = await response.blob();
-          this.$emit("submit-image", new File([blob], "image"));
+          if (blob.type.startsWith("image/")) {
+            const filetype = blob.type.split("/").pop();
+            this.$emit("submit-image", new File([blob], `image.${filetype}`));
+          } else {
+            throw "Invalid Response";
+          }
         } else {
           throw "Invalid Response";
         }
@@ -68,7 +73,7 @@ export default defineComponent({
   border: None;
   height: 100%;
   width: 100%;
-  padding: 0;
+  padding: 15px 0;
 }
 .form {
   background-color: rgba(0, 0, 0, 0);
@@ -88,10 +93,13 @@ input::placeholder {
   align-items: center;
   border: 2px var(--accent-1) solid;
   border-radius: 25px;
-  padding: 10px 40px;
+  padding: 0px 40px;
   transition: 0.2s;
 }
 .bar:hover {
-  background-color: var(--accent-2);
+  background-color: var(--button-hover);
+}
+.icon {
+  cursor: pointer;
 }
 </style>

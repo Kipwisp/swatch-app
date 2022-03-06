@@ -4,10 +4,10 @@ import router from "./router";
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
 import Unicon from "vue-unicons";
-import { uniImageUpload, uniClipboard } from "vue-unicons/dist/icons";
+import { uniImageUpload, uniClipboard, uniTimes } from "vue-unicons/dist/icons";
 import "bootstrap/dist/js/bootstrap.min.js";
 import "bootstrap";
 
-Unicon.add([uniImageUpload, uniClipboard]);
+Unicon.add([uniImageUpload, uniClipboard, uniTimes]);
 
 createApp(App).use(router).use(Unicon).use(Toast).mount("#app");

@@ -13,6 +13,7 @@ export default defineComponent({
 <style lang="scss">
 @import "@/assets/css/styles.scss";
 body {
+  position: absolute;
   background-color: var(--main-bg);
   margin: 0;
   width: 100%;

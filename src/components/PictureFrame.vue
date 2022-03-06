@@ -19,16 +19,38 @@ export default defineComponent({
       height: 0,
     };
   },
+  watch: {
+    data: function () {
+      if (this.data) {
+        this.loadImage(this.data).then((dimensions) => {
+          this.width = dimensions[0];
+          this.height = dimensions[1];
+        });
+      }
+    },
+  },
   mounted() {
-    const img = new Image();
-
     if (this.data) {
-      img.src = this.data;
-      img.onload = () => {
-        this.width = img.width;
-        this.height = img.height;
-      };
+      this.loadImage(this.data).then((dimensions) => {
+        this.width = dimensions[0];
+        this.height = dimensions[1];
+      });
     }
+  },
+  methods: {
+    loadImage: async (imgData: string): Promise<number[]> => {
+      const img = new Image();
+      img.src = imgData;
+      let dimensions = [] as number[];
+      await new Promise((resolve) => {
+        img.onload = async () => {
+          dimensions = [img.width, img.height];
+          resolve(true);
+        };
+      });
+
+      return dimensions;
+    },
   },
 });
 </script>
@@ -48,7 +70,7 @@ export default defineComponent({
 }
 .resolution {
   padding: 2px 5px;
-  background-color: var(--accent-1);
+  background-color: var(--pic-res);
   font-size: 0.8em;
   align-self: flex-end;
   border-radius: 0 0 5px 5px;

@@ -1,8 +1,22 @@
 <template>
+  <div
+    :style="{ 'background-image': `url(${image})` }"
+    class="background"
+  ></div>
   <div class="main">
     <div class="header">
-      <span class="dot"></span>
-      <div class="title">Analysis Complete!</div>
+      <div class="subheader">
+        <span class="dot"></span>
+        <div class="title">Analysis Complete!</div>
+      </div>
+      <Button
+        :text="'Upload'"
+        :action="
+          () => {
+            $refs.modal.openModal();
+          }
+        "
+      />
     </div>
     <div class="row">
       <Card v-if="image" title="Image">
@@ -34,6 +48,17 @@
       </Card>
     </div>
   </div>
+  <modal ref="modal" :title="'Upload an Image'">
+    <template v-slot:body>
+      <Upload
+        :callback="
+          () => {
+            $refs.modal.closeModal();
+          }
+        "
+      />
+    </template>
+  </modal>
 </template>
 
 <script lang="ts">
@@ -43,6 +68,9 @@ import ColorPalette from "@/components/ColorPalette.vue";
 import ValueDistribution from "@/components/ValueDistribution.vue";
 import PictureFrame from "@/components/PictureFrame.vue";
 import Card from "@/components/Card.vue";
+import Button from "@/components/Button.vue";
+import Modal from "@/components/Modal.vue";
+import Upload from "@/components/Upload.vue";
 
 export default defineComponent({
   name: "Home",
@@ -52,6 +80,9 @@ export default defineComponent({
     ValueDistribution,
     PictureFrame,
     Card,
+    Button,
+    Modal,
+    Upload,
   },
   props: {
     results: String,
@@ -72,19 +103,43 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
+.background {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  filter: blur(2px);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  z-index: -1;
+  opacity: 0.4;
+}
 .main {
   display: flex;
   flex-direction: column;
-  width: 80%;
-  height: 80%;
-  padding: 0 10%;
+  width: auto;
+  height: auto;
+  background-color: var(--glass);
+  border-radius: 50px;
+  margin: 25px 100px;
+  padding: 30px;
+  min-width: 600px;
+  animation: enter 1s ease;
+  backdrop-filter: blur(5px);
 }
 .header {
+  width: 100%;
   align-self: flex-start;
   align-items: center;
+  justify-content: space-between;
   display: flex;
   flex-direction: row;
-  margin: 50px 0 20px 0;
+  padding-bottom: 15px;
+}
+.subheader {
+  align-self: flex-start;
+  display: flex;
+  flex-direction: row;
 }
 .title {
   user-select: none;
@@ -96,7 +151,7 @@ export default defineComponent({
   justify-content: center;
   gap: 10px;
   margin-bottom: 10px;
-  width: 100%;
+  width: auto;
   flex-wrap: wrap;
 }
 .dot {
@@ -105,10 +160,10 @@ export default defineComponent({
   border-radius: 2.4em;
   box-shadow: 0px 0px 3px #000;
   background-color: #df004f;
-  animation: loading 5s 0s ease infinite alternate;
+  animation: flash 2s 0s ease infinite alternate;
   margin-right: 10px;
 }
-@keyframes loading {
+@keyframes flash {
   0% {
     background: #ff4848;
   }
@@ -124,6 +179,16 @@ export default defineComponent({
   100% {
     transform: translateY(0px);
     background: #d858ff;
+  }
+}
+@keyframes enter {
+  from {
+    filter: blur(8px);
+    transform: scale(0.8);
+  }
+  to {
+    filter: blur(0px);
+    transform: scale(1);
   }
 }
 </style>

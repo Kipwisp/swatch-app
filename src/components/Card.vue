@@ -21,8 +21,9 @@ export default defineComponent({
 <style scoped lang="scss">
 .card {
   padding: 25px 50px 50px 50px;
-  background-color: rgb(16, 16, 19);
+  background-color: var(--card-bg);
   border-radius: 25px;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.6);
 }
 .title {
   font-size: 1.6em;

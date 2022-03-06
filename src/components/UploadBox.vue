@@ -72,14 +72,14 @@ input[type="file"] {
   width: 100%;
   flex: 1;
   align-items: center;
-  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='25' ry='25' stroke='%2337425FFF' stroke-width='4' stroke-dasharray='25' stroke-dashoffset='10' stroke-linecap='square'/%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='25' ry='25' stroke='%23636363' stroke-width='4' stroke-dasharray='25' stroke-dashoffset='10' stroke-linecap='square'/%3e%3c/svg%3e");
   border-radius: 25px;
   padding: 50px 100px;
   color: white;
   transition: 0.2s;
 }
 .upload:hover {
-  background-color: var(--accent-2);
+  background-color: var(--button-hover);
 }
 .over {
   background-color: var(--accent-2);

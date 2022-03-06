@@ -1,6 +1,6 @@
 <template>
-  <div class="main">
-    <div class="container centered">
+  <div class="upload-container">
+    <div class="container">
       <div v-if="!uploading" class="upload-box">
         <UploadBox v-on:submit-image="uploadFile" />
       </div>
@@ -23,11 +23,14 @@ import LinkBar from "@/components/LinkBar.vue";
 import Processing from "@/components/Processing.vue";
 
 export default defineComponent({
-  name: "Home",
+  name: "Upload",
   components: {
     UploadBox,
     LinkBar,
     Processing,
+  },
+  props: {
+    callback: Function,
   },
   data: () => {
     return {
@@ -57,6 +60,9 @@ export default defineComponent({
         notify(errorUpload);
       }
 
+      if (this.callback) {
+        this.callback();
+      }
       this.uploading = false;
     },
     async resizeImage(url: string) {
@@ -117,9 +123,8 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-.main {
-  width: 100%;
-  height: 100%;
+.upload-container {
+  background-color: rgba(0, 0, 0, 0);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -130,12 +135,5 @@ export default defineComponent({
 }
 .container {
   width: 100%;
-  max-width: 50em;
-}
-.centered {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 }
 </style>

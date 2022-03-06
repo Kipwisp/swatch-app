@@ -7,7 +7,7 @@
       <span class="dot"></span>
       <span class="small dot"></span>
     </div>
-    <div class="loader-text">Analyzing...</div>
+    <div class="loader-text">Processing...</div>
   </div>
 </template>
 

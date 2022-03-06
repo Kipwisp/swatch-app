@@ -15,6 +15,7 @@
     "d3": "^7.1.1",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
+    "vue-toastification": "^2.0.0-rc.5",
     "vue-unicons": "^3.2.1"
   },
   "devDependencies": {

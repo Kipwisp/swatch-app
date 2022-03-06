@@ -1,7 +1,7 @@
 <template>
   <div class="bar">
     <form
-      class="inputbar"
+      class="form"
       enctype="multipart/form-data"
       v-on:submit.prevent="uploadImage"
     >
@@ -26,6 +26,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import ToolTip from "./ToolTip.vue";
+import notify, { errorFetch } from "@/utils/NotificationHandler.ts";
 
 export default defineComponent({
   name: "LinkBar",
@@ -43,12 +44,16 @@ export default defineComponent({
       this.uploadImage();
     },
     async uploadImage() {
-      const response = await fetch(this.link);
-      console.log(response);
-
-      if (response.ok) {
-        const blob = await response.blob();
-        this.$emit("submit-image", blob);
+      try {
+        const response = await fetch(this.link);
+        if (response && response.ok) {
+          const blob = await response.blob();
+          this.$emit("submit-image", new File([blob], "image"));
+        } else {
+          throw "Invalid Response";
+        }
+      } catch (error) {
+        notify(errorFetch);
       }
     },
   },
@@ -61,7 +66,14 @@ export default defineComponent({
   color: white;
   background-color: rgba(0, 0, 0, 0);
   border: None;
+  height: 100%;
   width: 100%;
+  padding: 0;
+}
+.form {
+  background-color: rgba(0, 0, 0, 0);
+  width: 100%;
+  height: 100%;
 }
 input:focus {
   outline: None;
@@ -73,7 +85,7 @@ input::placeholder {
   flex: 1;
   display: flex;
   justify-content: space-between;
-  max-width: 50em;
+  align-items: center;
   border: 2px var(--accent-1) solid;
   border-radius: 25px;
   padding: 10px 40px;

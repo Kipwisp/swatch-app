@@ -8,13 +8,13 @@
 import { defineComponent } from "vue";
 import * as d3 from "d3";
 
-type response = {
-  count: number;
-  polar: number[];
+interface Cluster {
   rgb: string;
   css: string;
   hex: string;
-};
+  polar: number[];
+  count: number;
+}
 
 export default defineComponent({
   name: "ColorProportions",
@@ -23,7 +23,7 @@ export default defineComponent({
   },
   mounted() {
     const size = 350;
-    const padding = 40;
+    const padding = 35;
     const dotSize = 12;
 
     const radius = size / 2 - padding;
@@ -57,9 +57,12 @@ export default defineComponent({
         .style("opacity", 1)
         .style("visibility", "visible");
       tooltip
-        .html(d[3])
+        .html(
+          `<div>Hex: #${d[4]}</div><div>RGB: ${d[5]}</div><div>Size: ${d[2]}</div>`
+        )
         .style("left", event.x + 10 + "px")
-        .style("top", event.y + 10 + "px");
+        .style("top", event.y + 10 + "px")
+        .style("text-align", "left");
     };
     const moveTooltip = (event: MouseEvent) => {
       tooltip
@@ -125,16 +128,21 @@ export default defineComponent({
 
     let data: (number | string)[][] = [];
 
+    let max = 0;
     if (this.data) {
-      Object.values(this.data).forEach((value: response) => {
-        data.push([...value.polar, value.count, value.css]);
+      Object.values(this.data).forEach((value: Cluster) => {
+        data.push([
+          ...value.polar,
+          value.count,
+          value.css,
+          value.hex,
+          value.rgb,
+        ]);
       });
     }
 
-    const zScale = d3
-      .scaleSqrt()
-      .domain([0, d3.max(data, (d: (number | string)[]) => d[2])])
-      .range([0, 20]);
+    max = d3.max(data, (d: (number | string)[]) => d[2]);
+    const zScale = d3.scaleSqrt().domain([0, max]).range([0, 30]);
 
     svg
       .selectAll("point")
@@ -159,7 +167,7 @@ export default defineComponent({
       .attr("r", 0)
       .transition()
       .attr("r", (d: number[]) => {
-        const size = zScale(d[2]);
+        const size = zScale(Math.max(d[2], 200));
         return size;
       })
       .duration(1000);
@@ -181,6 +189,7 @@ export default defineComponent({
   border-radius: 5px;
   padding: 10px;
   color: white;
+  user-select: none;
 }
 .chart ::v-deep(.point) {
   stroke: none;

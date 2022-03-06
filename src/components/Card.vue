@@ -20,16 +20,13 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .card {
-  width: 500px;
-  height: 500px;
-  padding: 20px 20px;
+  padding: 25px 50px 50px 50px;
   background-color: rgb(16, 16, 19);
   border-radius: 25px;
 }
 .title {
   font-size: 1.6em;
   text-align: left;
-  margin-left: 20px;
   user-select: none;
 }
 .child {

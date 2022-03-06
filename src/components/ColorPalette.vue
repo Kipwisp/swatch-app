@@ -2,7 +2,7 @@
   <div class="frame">
     <div ref="chart" class="chart">
       <template v-for="item in data" :key="item">
-        <a :href="'https://www.color-hex.com/color/' + item.hex"
+        <a :href="'https://www.color-hex.com/color/' + item.hex" target="_blank"
           ><div class="color" :style="{ 'background-color': item.rgb }">
             {{ `#${item.hex}` }}
           </div></a
@@ -14,11 +14,21 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import type { PropType } from "vue";
+
+interface Palette {
+  value: number[];
+  hex: string;
+  rgb: string;
+  count: number;
+}
 
 export default defineComponent({
   name: "ColorPalette",
   props: {
-    data: Object,
+    data: {
+      type: Object as PropType<Palette>,
+    },
   },
 });
 </script>
@@ -31,6 +41,7 @@ export default defineComponent({
   align-items: center;
 }
 .color {
+  user-select: none;
   padding: 10px 150px;
   margin-bottom: 10px;
   font-size: 1em;

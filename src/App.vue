@@ -1,24 +1,22 @@
 <template>
-  <NavBar />
   <router-view />
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import NavBar from "@/components/NavBar.vue"; // @ is an alias to /src
 
 export default defineComponent({
   name: "App",
-  components: {
-    NavBar,
-  },
 });
 </script>
 
 <style lang="scss">
 @import "@/assets/css/styles.scss";
 body {
+  background-color: var(--main-bg);
   margin: 0;
+  width: 100%;
+  height: 100%;
 }
 #app {
   display: flex;
@@ -27,11 +25,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  background-color: var(--main-bg);
   color: white;
-  width: 100vw;
-  height: 100vh;
-  margin: 0;
 }
 .no-background {
   background-color: rgba(0, 0, 0, 0);

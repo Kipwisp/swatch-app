@@ -8,10 +8,10 @@
 import { defineComponent } from "vue";
 import * as d3 from "d3";
 
-type response = {
+interface Bin {
   count: number;
   bin: number;
-};
+}
 
 export default defineComponent({
   name: "ValueDistribution",
@@ -49,22 +49,35 @@ export default defineComponent({
 
     let max = 0;
     if (this.data) {
-      max = Object.values(this.data).reduce((x, acc) =>
-        x.count > acc ? x.count : acc.count
+      max = Object.values(this.data).reduce(
+        (acc, x) => (x.count > acc ? x.count : acc),
+        0
       );
-      Object.values(this.data).forEach((value: response) => {
+      Object.values(this.data).forEach((value: Bin) => {
         data.push([value.bin, value.count]);
       });
     }
 
-    const y = d3
-      .scaleLinear()
-      .domain([0, max + 0.02])
-      .range([height, 0]);
+    const y = d3.scaleLinear().domain([0, max]).range([height, 0]);
 
     svg.append("g").call(d3.axisLeft(y).ticks(4).tickFormat(d3.format(".1%")));
 
     const defs = svg.append("defs");
+
+    const startData = data.map((d) => {
+      return [d[0], 0];
+    });
+
+    const area = d3
+      .area()
+      .curve(d3.curveBasis)
+      .x((d: number[]) => {
+        return x(d[0]);
+      })
+      .y1((d: number[]) => {
+        return y(d[1]);
+      })
+      .y0(y(0));
 
     const gradient = defs
       .append("linearGradient")
@@ -89,26 +102,19 @@ export default defineComponent({
 
     svg
       .append("path")
-      .attr("class", "mypath")
-      .datum(data)
-      .attr("opacity", ".8")
+      .datum(startData)
+      .attr("d", area)
       .attr("fill", "url(#svgGradient)")
       .attr("stroke", "white")
       .attr("stroke-width", 2)
-      .attr("stroke-linejoin", "round")
-      .attr(
-        "d",
-        d3
-          .area()
-          .curve(d3.curveBasis)
-          .x((d: number[]) => {
-            return x(d[0]);
-          })
-          .y1((d: number[]) => {
-            return y(d[1]);
-          })
-          .y0(y(0))
-      );
+      .transition()
+      .duration(1000)
+      .attrTween("d", function () {
+        const interpolator = d3.interpolateArray(startData, data);
+        return (d: number) => {
+          return area(interpolator(d));
+        };
+      });
   },
 });
 </script>

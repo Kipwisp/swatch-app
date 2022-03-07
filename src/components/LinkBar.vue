@@ -93,7 +93,7 @@ input::placeholder {
   align-items: center;
   border: 2px var(--accent-1) solid;
   border-radius: 25px;
-  padding: 0px 40px;
+  padding: 0px 1em;
   transition: 0.2s;
 }
 .bar:hover {

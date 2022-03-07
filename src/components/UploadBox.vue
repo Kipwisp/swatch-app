@@ -13,8 +13,8 @@
         <unicon
           name="image-upload"
           fill="white"
-          width="128"
-          height="128"
+          width="14vh"
+          height="14vh"
         ></unicon>
       </div>
       Drag and drop, or paste to upload!
@@ -95,7 +95,7 @@ input[type="file"] {
   align-items: center;
   background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='25' ry='25' stroke='%23636363' stroke-width='4' stroke-dasharray='25' stroke-dashoffset='10' stroke-linecap='square'/%3e%3c/svg%3e");
   border-radius: 25px;
-  padding: 50px 100px;
+  padding: 2em 3em;
   color: white;
   transition: 0.2s;
 }

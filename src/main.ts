@@ -2,7 +2,6 @@ import { createApp } from "vue";
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
 import Unicon from "vue-unicons";
-import { ComponentCustomProperties } from "vue";
 import mitt from "mitt";
 import App from "./App.vue";
 import router from "./router";

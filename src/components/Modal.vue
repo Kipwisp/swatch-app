@@ -70,17 +70,16 @@ export default defineComponent({
   &_dialog {
     background-color: var(--modal-bg);
     position: relative;
-    margin: 50px auto;
-    width: 900px;
-    height: 440px;
+    margin: 5vh auto;
+    max-width: 900px;
+    max-height: 440px;
     display: flex;
     flex-direction: column;
     border-radius: 25px;
     z-index: 2;
     padding: 20px 40px 40px 40px;
-    @media screen and (max-width: 900px) {
-      width: 90%;
-    }
+    width: 75%;
+    height: 75%;
   }
   &_close {
     padding: 0;
@@ -105,6 +104,9 @@ export default defineComponent({
     align-items: center;
     justify-content: space-between;
     margin-bottom: 20px;
+  }
+  &_body {
+    height: 100%;
   }
 }
 .fade-enter-active,

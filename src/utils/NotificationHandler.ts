@@ -4,7 +4,7 @@ export const errorFetch = "Error! Could not fetch image!";
 export const errorUpload = "Error! Failed to upload image!";
 export const errorType = "Error! Incorrect file type!";
 
-export const successUpload = "Success! Processing finished!";
+export const successUpload = "Processing finished!";
 
 export const notifyError = (message: string): void => {
   const toast = useToast();

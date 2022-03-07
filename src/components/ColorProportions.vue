@@ -37,12 +37,9 @@ export default defineComponent({
   },
   methods: {
     renderChart: (chart: HTMLDivElement, chartData: Cluster[]) => {
-      const size = 350;
+      const size = 380;
       const padding = 35;
       const dotSize = 12;
-
-      const marginTop = 25;
-      const marginLeft = 100;
 
       const radius = size / 2 - padding;
       const radiusScale = d3.scaleLinear().domain([0, 1]).range([0, radius]);
@@ -78,14 +75,14 @@ export default defineComponent({
           .html(
             `<div>Hex: #${d[4]}</div><div>RGB: ${d[5]}</div><div>Size: ${d[2]}</div>`
           )
-          .style("left", event.x + 10 - marginLeft + "px !important")
-          .style("top", event.y + 10 - marginTop + "px !important")
+          .style("left", event.pageX + 10 + "px !important")
+          .style("top", event.pageY + 10 + "px !important")
           .style("text-align", "left");
       };
       const moveTooltip = (event: MouseEvent) => {
         tooltip
-          .style("left", event.x + 10 - marginLeft + "px")
-          .style("top", event.y + 10 - marginTop + "px");
+          .style("left", event.pageX + 10 + "px")
+          .style("top", event.pageY + 10 + "px");
       };
       const hideTooltip = (event: MouseEvent) => {
         const point = event.target as HTMLInputElement;
@@ -101,8 +98,10 @@ export default defineComponent({
         .select(chart)
         .append("div")
         .append("svg")
-        .attr("width", size + padding)
-        .attr("height", size + padding)
+        .attr("width", "100%")
+        .attr("height", "100%")
+        .attr("preserveAspectRatio", "xMinYMin meet")
+        .attr("viewBox", `0 0 ${size + padding} ${size + padding}`)
         .append("g")
         .attr(
           "transform",
@@ -196,6 +195,9 @@ export default defineComponent({
 .frame {
   fill: none;
   stroke: #000;
+  height: 100%;
+  max-width: 425px;
+  width: 80vw;
 }
 .title {
   font-size: 1.6em;
@@ -206,8 +208,6 @@ export default defineComponent({
   border-radius: 5px;
   padding: 10px;
   color: white;
-  top: 0;
-  left: 0;
   user-select: none;
 }
 .chart ::v-deep(.point) {

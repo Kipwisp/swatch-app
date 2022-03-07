@@ -39,10 +39,16 @@ export default defineComponent({
   flex-direction: column;
   align-content: center;
   align-items: center;
+  max-width: 350px;
+  width: 80vw;
+}
+.chart {
+  width: 100%;
 }
 .color {
   user-select: none;
-  padding: 10px 150px;
+  padding: max(3%, 15px) 0;
+  width: 100%;
   margin-bottom: 10px;
   font-size: 1em;
   border-radius: 15px;

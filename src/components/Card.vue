@@ -20,20 +20,30 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .card {
-  padding: 25px 50px 50px 50px;
+  display: flex;
+  flex-direction: column;
+  padding: min(40px, 8%);
   background-color: var(--card-bg);
   border-radius: 25px;
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.6);
+  max-width: 650px;
+  max-height: 450px;
+}
+@media only screen and (max-width: 550px) {
+  .card {
+    height: 100%;
+  }
 }
 .title {
-  font-size: 1.6em;
+  font-size: 1.4em;
   text-align: left;
   user-select: none;
+  margin-bottom: 5px;
 }
 .child {
   height: 100%;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
 }
 </style>

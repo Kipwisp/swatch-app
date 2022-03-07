@@ -37,8 +37,8 @@ $speed: 5s;
   align-items: center;
 }
 .dot {
-  width: 100px;
-  height: 100px;
+  width: 5vw;
+  height: 5vw;
   margin: 20px;
   border-radius: 100px;
   box-shadow: 0px 0px 3px #000;
@@ -60,12 +60,12 @@ $speed: 5s;
   }
 }
 .big {
-  width: 150px;
-  height: 150px;
+  width: 6vw;
+  height: 6vw;
 }
 .small {
-  width: 50px;
-  height: 50px;
+  width: 4vw;
+  height: 4vw;
 }
 @keyframes fade {
   to {

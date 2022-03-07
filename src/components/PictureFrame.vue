@@ -60,14 +60,12 @@ export default defineComponent({
 .frame {
   display: flex;
   flex-direction: column;
-  align-content: center;
   justify-content: center;
-  align-items: center;
-  height: 380px;
+  height: 85%;
 }
 .pic {
   max-width: 100%;
-  max-height: 100%;
+  max-height: 425px;
 }
 .resolution {
   padding: 2px 5px;

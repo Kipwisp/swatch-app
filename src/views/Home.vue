@@ -85,7 +85,7 @@ export default defineComponent({
 .backdrop {
   background-color: var(--glass);
   width: 100%;
-  height: 400px;
+  height: min(400px, 50%);
   display: flex;
   flex-direction: row;
   align-items: center;

@@ -1,63 +1,66 @@
 <template>
-  <div
-    :style="{ 'background-image': `url(${image})` }"
-    class="background"
-  ></div>
-  <div class="main">
-    <div class="header">
-      <div class="subheader">
-        <span class="dot"></span>
-        <div class="title">Color Analysis Results</div>
+  <div :style="{ 'background-image': `url(${image})` }" class="background" />
+  <div class="pad">
+    <div class="main">
+      <div class="fix">
+        <div class="header">
+          <div class="subheader">
+            <span class="dot"></span>
+            <div class="title">{{ selectedTitle }}</div>
+          </div>
+          <div class="buttons">
+            <Button
+              text="Home"
+              icon="estate"
+              :action="
+                () => {
+                  this.$router.push({ name: 'Home' });
+                }
+              "
+            />
+            <Button
+              text="Upload"
+              icon="upload"
+              :action="
+                () => {
+                  $refs.modal.openModal();
+                }
+              "
+            />
+          </div>
+        </div>
+        <div>
+          <div class="row">
+            <Card v-if="image" title="Image">
+              <template v-slot:component>
+                <PictureFrame :data="image" />
+              </template>
+            </Card>
+            <Card v-if="results" title="Color Proportions">
+              <template v-slot:component>
+                <ColorProportions :data="data.color_proportion" />
+              </template>
+            </Card>
+            <Card v-if="results" title="Color Palette">
+              <template v-slot:component>
+                <ColorPalette :data="data.color_palette" />
+              </template>
+            </Card>
+          </div>
+          <div class="row">
+            <Card v-if="grayscale" title="Values">
+              <template v-slot:component>
+                <PictureFrame :data="grayscale" />
+              </template>
+            </Card>
+            <Card v-if="results" title="Value Distribution">
+              <template v-slot:component>
+                <ValueDistribution :data="data.value_distribution" />
+              </template>
+            </Card>
+          </div>
+        </div>
       </div>
-      <div class="buttons">
-        <Button
-          text="Home"
-          icon="estate"
-          :action="
-            () => {
-              this.$router.push({ name: 'Home' });
-            }
-          "
-        />
-        <Button
-          text="Upload"
-          icon="upload"
-          :action="
-            () => {
-              $refs.modal.openModal();
-            }
-          "
-        />
-      </div>
-    </div>
-    <div class="row">
-      <Card v-if="image" title="Image">
-        <template v-slot:component>
-          <PictureFrame :data="image" />
-        </template>
-      </Card>
-      <Card v-if="results" title="Color Proportions">
-        <template v-slot:component>
-          <ColorProportions :data="data.color_proportion" />
-        </template>
-      </Card>
-      <Card v-if="results" title="Color Palette">
-        <template v-slot:component>
-          <ColorPalette :data="data.color_palette" />
-        </template>
-      </Card>
-    </div>
-    <div class="row">
-      <Card v-if="grayscale" title="Values">
-        <template v-slot:component>
-          <PictureFrame :data="grayscale" />
-        </template>
-      </Card>
-      <Card v-if="results" title="Value Distribution">
-        <template v-slot:component>
-          <ValueDistribution :data="data.value_distribution" />
-        </template>
-      </Card>
     </div>
   </div>
   <modal ref="modal" :title="'Image Upload'">
@@ -87,23 +90,40 @@ import Upload from "@/components/Upload.vue";
 export default defineComponent({
   name: "Home",
   components: {
-    ColorProportions,
-    ColorPalette,
-    ValueDistribution,
     PictureFrame,
     Card,
     Button,
     Modal,
     Upload,
+    ColorProportions,
+    ColorPalette,
+    ValueDistribution,
   },
   props: {
     results: String,
     image: String,
     grayscale: String,
   },
+  data: function () {
+    return {
+      titles: [
+        "Analysis complete...",
+        "Colors unified...",
+        "Paint splattered...",
+        "Interesting choice...",
+        "Maybe you should try another?",
+      ],
+    };
+  },
   computed: {
     data() {
       return JSON.parse(this.results as string);
+    },
+    selectedTitle() {
+      if (this.results) {
+        return this.titles[Math.floor(Math.random() * this.titles.length)];
+      }
+      return undefined;
     },
   },
   mounted() {
@@ -127,17 +147,42 @@ export default defineComponent({
   opacity: 0.4;
 }
 .main {
-  display: flex;
-  flex-direction: column;
+  position: relative;
+  display: block;
   width: auto;
   height: auto;
   background-color: var(--glass);
-  border-radius: 50px;
-  margin: 25px 100px;
-  padding: 30px;
-  min-width: 600px;
+  border-radius: 25px;
+  margin: 20px 20px 0px 20px;
+  padding: 30px 30px 0px 30px;
   animation: enter 1s ease;
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(25px);
+}
+.pad {
+  padding-bottom: 10px;
+}
+.fix {
+  position: relative;
+  width: 100%;
+  height: auto;
+  top: -50px;
+  left: -50px;
+  padding: 50px 50px 0px 50px;
+  filter: blur(0px);
+}
+@media only screen and (max-width: 550px) {
+  .main {
+    padding: 10px 10px 0px 10px;
+    margin: 5px 5px 0px 5px;
+  }
+  .pad {
+    padding-bottom: 0px;
+  }
+  .fix {
+    top: -15px;
+    left: -15px;
+    padding: 15px 15px 0px 15px;
+  }
 }
 .header {
   width: 100%;
@@ -148,6 +193,7 @@ export default defineComponent({
   flex-direction: row;
   padding-bottom: 15px;
   flex-wrap: wrap;
+  gap: 10px;
 }
 .subheader {
   align-self: flex-start;
@@ -155,13 +201,19 @@ export default defineComponent({
   flex-direction: row;
 }
 .buttons {
-  flex-wrap: wrap;
+  align-content: center;
+  justify-content: flex-end;
+  align-items: center;
+  flex-direction: row;
   display: flex;
-  gap: 25px;
+  gap: 1vw;
+  flex: 1;
+  align-self: right;
 }
 .title {
   user-select: none;
-  font-size: 2.4em;
+  font-size: 2em;
+  text-align: left;
 }
 .row {
   display: flex;
@@ -173,13 +225,13 @@ export default defineComponent({
   flex-wrap: wrap;
 }
 .dot {
-  width: 2.4em;
-  height: 2.4em;
-  border-radius: 2.4em;
+  width: 2em;
+  height: 2em;
+  border-radius: 2em;
   box-shadow: 0px 0px 3px #000;
   background-color: #df004f;
   animation: flash 2s 0s ease infinite alternate;
-  margin-right: 10px;
+  margin-right: 0.5em;
 }
 @keyframes flash {
   0% {
@@ -195,7 +247,6 @@ export default defineComponent({
     background: #3bb1ff;
   }
   100% {
-    transform: translateY(0px);
     background: #d858ff;
   }
 }

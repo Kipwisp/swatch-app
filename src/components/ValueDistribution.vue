@@ -34,16 +34,18 @@ export default defineComponent({
   },
   methods: {
     renderChart: (chart: HTMLDivElement, chartData: Bin[]) => {
-      const height = 250;
+      const height = 325;
       const width = 325;
-      const padding = 100;
+      const padding = 60;
 
       const svg = d3
         .select(chart)
         .append("div")
         .append("svg")
-        .attr("width", width + padding)
-        .attr("height", height + padding)
+        .attr("width", "100%")
+        .attr("height", "100%")
+        .attr("preserveAspectRatio", "xMinYMin meet")
+        .attr("viewBox", `0 0 ${width + padding} ${height + padding}`)
         .append("g")
         .attr(
           "transform",
@@ -73,9 +75,9 @@ export default defineComponent({
       const max = d3.max(data, (d: (number | string)[]) => d[1]);
       const yScale = d3.scaleLinear().domain([0, max]).range([height, 0]);
 
-      svg
-        .append("g")
-        .call(d3.axisLeft(yScale).ticks(4).tickFormat(d3.format(".1%")));
+      // svg
+      //   .append("g")
+      //   .call(d3.axisLeft(yScale).ticks(4).tickFormat(d3.format(".1%")));
 
       const defs = svg.append("defs");
 
@@ -136,15 +138,23 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
+.frame {
+  width: 100%;
+  height: 100%;
+  max-width: 425px;
+  width: 80vw;
+}
 .chart {
   font-size: 1.6em;
+  width: 100%;
+  height: 100%;
 }
 .title {
   font-size: 1.6em;
 }
 .chart ::v-deep(text) {
   user-select: none;
-  font-size: 1.2em;
+  font-size: 1.4em;
   font-family: Avenir, Helvetica, Arial, sans-serif;
 }
 </style>

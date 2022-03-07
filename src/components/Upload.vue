@@ -12,7 +12,7 @@
       <div v-if="!uploading" class="link-bar">
         <LinkBar v-on:submit-image="uploadFile" />
       </div>
-      <div class="loading" v-if="uploading">
+      <div v-if="uploading" class="loading">
         <Processing />
       </div>
     </div>
@@ -160,6 +160,7 @@ export default defineComponent({
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  height: 100%;
 }
 .link-bar {
   margin-top: 20px;

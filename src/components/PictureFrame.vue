@@ -22,7 +22,7 @@ export default defineComponent({
   watch: {
     data: function () {
       if (this.data) {
-        this.loadImage(this.data).then((dimensions) => {
+        this.loadImage(this.data).then((dimensions: number[]) => {
           this.width = dimensions[0];
           this.height = dimensions[1];
         });
@@ -31,7 +31,7 @@ export default defineComponent({
   },
   mounted() {
     if (this.data) {
-      this.loadImage(this.data).then((dimensions) => {
+      this.loadImage(this.data).then((dimensions: number[]) => {
         this.width = dimensions[0];
         this.height = dimensions[1];
       });
@@ -56,6 +56,7 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
+@import "@/assets/css/styles.scss";
 .frame {
   display: flex;
   flex-direction: column;

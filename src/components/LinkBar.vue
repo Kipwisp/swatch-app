@@ -26,7 +26,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import ToolTip from "./ToolTip.vue";
-import notify, { errorFetch } from "@/utils/NotificationHandler.ts";
+import { notifyError, errorFetch } from "@/utils/NotificationHandler.ts";
 
 export default defineComponent({
   name: "LinkBar",
@@ -58,7 +58,7 @@ export default defineComponent({
           throw "Invalid Response";
         }
       } catch (error) {
-        notify(errorFetch);
+        notifyError(errorFetch);
       }
     },
   },

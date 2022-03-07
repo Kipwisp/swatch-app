@@ -5,8 +5,8 @@
         class="input-file"
         type="file"
         accept="image/*"
-        title=" "
-        @change="uploadImage($event)"
+        title=""
+        @change="getImageFromFile($event)"
         id="file-input"
       />
       <div class="image">
@@ -17,13 +17,14 @@
           height="128"
         ></unicon>
       </div>
-      Click to upload, or drag & drop here!
+      Drag and drop, or paste to upload!
     </form>
   </button>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { notifyError, errorType } from "@/utils/NotificationHandler.ts";
 
 export default defineComponent({
   name: "UploadBox",
@@ -42,9 +43,29 @@ export default defineComponent({
     });
   },
   methods: {
-    uploadImage(event: Event) {
-      let file = (event.target as HTMLInputElement).files?.[0];
-      this.$emit("submit-image", file);
+    getImageFromFile(event: Event) {
+      const file = (event.target as HTMLInputElement).files?.[0];
+      if (file?.type.startsWith("image/")) {
+        this.$emit("submit-image", file);
+      } else {
+        notifyError(errorType);
+      }
+    },
+    getImageFromClipboard(event: ClipboardEvent) {
+      const items = event?.clipboardData?.items;
+
+      if (items) {
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].type.startsWith("image/")) {
+            const blob = items[i].getAsFile();
+            if (blob) {
+              const filetype = blob.type.split("/").pop();
+              this.$emit("submit-image", new File([blob], `image.${filetype}`));
+              break;
+            }
+          }
+        }
+      }
     },
   },
 });
@@ -82,6 +103,6 @@ input[type="file"] {
   background-color: var(--button-hover);
 }
 .over {
-  background-color: var(--accent-2);
+  background-color: var(--button-hover);
 }
 </style>

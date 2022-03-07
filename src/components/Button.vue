@@ -1,5 +1,8 @@
 <template>
-  <button v-on:click="action" class="button">{{ text }}</button>
+  <button v-on:click="action" class="button">
+    <unicon :name="icon" fill="white" width="1.2em" height="1.2em"></unicon
+    >{{ text }}
+  </button>
 </template>
 
 <script lang="ts">
@@ -10,6 +13,7 @@ export default defineComponent({
   props: {
     action: Function,
     text: String,
+    icon: String,
   },
 });
 </script>
@@ -17,9 +21,14 @@ export default defineComponent({
 <style scoped lang="scss">
 @import "@/assets/css/styles.scss";
 .button {
+  display: flex;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
   user-select: none;
   color: white;
-  font-size: 1.4em;
+  font-size: 1.2em;
   width: 200px;
   height: 50px;
   border: none;
@@ -30,6 +39,8 @@ export default defineComponent({
 }
 .button:hover {
   background-color: var(--button-hover);
-  color: lightgray;
+}
+.button:focus {
+  background-color: var(--button-clicked);
 }
 </style>

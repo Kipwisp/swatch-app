@@ -1,4 +1,9 @@
 <template>
+  <input
+    ref="pasteboard"
+    class="paste"
+    @paste="getImageFromClipboard($event)"
+  />
   <div class="upload-container">
     <div class="container">
       <div v-if="!uploading" class="upload-box">
@@ -17,7 +22,12 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 
-import notify, { errorUpload } from "@/utils/NotificationHandler.ts";
+import {
+  notifySuccess,
+  notifyError,
+  successUpload,
+  errorUpload,
+} from "@/utils/NotificationHandler.ts";
 import UploadBox from "@/components/UploadBox.vue";
 import LinkBar from "@/components/LinkBar.vue";
 import Processing from "@/components/Processing.vue";
@@ -36,6 +46,9 @@ export default defineComponent({
     return {
       uploading: false,
     };
+  },
+  mounted() {
+    (this.$refs.pasteboard as HTMLDivElement).focus();
   },
   methods: {
     async uploadFile(file: File) {
@@ -57,12 +70,14 @@ export default defineComponent({
           params: { results: stringify, image: image, grayscale: grayscale },
         });
       } catch (error) {
-        notify(errorUpload);
+        notifyError(errorUpload);
       }
 
       if (this.callback) {
         this.callback();
       }
+
+      notifySuccess(successUpload);
       this.uploading = false;
     },
     async resizeImage(url: string) {
@@ -118,6 +133,22 @@ export default defineComponent({
 
       return data;
     },
+    getImageFromClipboard(event: ClipboardEvent) {
+      const items = event?.clipboardData?.items;
+
+      if (items) {
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].type.startsWith("image/")) {
+            const blob = items[i].getAsFile();
+            if (blob) {
+              const filetype = blob.type.split("/").pop();
+              this.uploadFile(new File([blob], `image.${filetype}`));
+              break;
+            }
+          }
+        }
+      }
+    },
   },
 });
 </script>
@@ -135,5 +166,15 @@ export default defineComponent({
 }
 .container {
   width: 100%;
+}
+.paste {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  z-index: -1;
+  cursor: default;
 }
 </style>

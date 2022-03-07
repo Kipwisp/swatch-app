@@ -83,7 +83,6 @@ export default defineComponent({
           .style("text-align", "left");
       };
       const moveTooltip = (event: MouseEvent) => {
-        console.log(event);
         tooltip
           .style("left", event.x + 10 - marginLeft + "px")
           .style("top", event.y + 10 - marginTop + "px");

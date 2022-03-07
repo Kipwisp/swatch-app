@@ -7,16 +7,28 @@
     <div class="header">
       <div class="subheader">
         <span class="dot"></span>
-        <div class="title">Analysis Complete!</div>
+        <div class="title">Color Analysis Results</div>
       </div>
-      <Button
-        :text="'Upload'"
-        :action="
-          () => {
-            $refs.modal.openModal();
-          }
-        "
-      />
+      <div class="buttons">
+        <Button
+          text="Home"
+          icon="estate"
+          :action="
+            () => {
+              this.$router.push({ name: 'Home' });
+            }
+          "
+        />
+        <Button
+          text="Upload"
+          icon="upload"
+          :action="
+            () => {
+              $refs.modal.openModal();
+            }
+          "
+        />
+      </div>
     </div>
     <div class="row">
       <Card v-if="image" title="Image">
@@ -48,7 +60,7 @@
       </Card>
     </div>
   </div>
-  <modal ref="modal" :title="'Upload an Image'">
+  <modal ref="modal" :title="'Image Upload'">
     <template v-slot:body>
       <Upload
         :callback="
@@ -104,7 +116,7 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .background {
-  position: absolute;
+  position: fixed;
   width: 100vw;
   height: 100vh;
   filter: blur(2px);
@@ -135,11 +147,17 @@ export default defineComponent({
   display: flex;
   flex-direction: row;
   padding-bottom: 15px;
+  flex-wrap: wrap;
 }
 .subheader {
   align-self: flex-start;
   display: flex;
   flex-direction: row;
+}
+.buttons {
+  flex-wrap: wrap;
+  display: flex;
+  gap: 25px;
 }
 .title {
   user-select: none;

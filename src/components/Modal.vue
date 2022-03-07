@@ -88,12 +88,17 @@ export default defineComponent({
     cursor: pointer;
     border-radius: 25px;
     transition: background-color 0.2s;
+    pointer-events: auto;
   }
   &_close:hover {
     background-color: var(--button-hover);
   }
+  &_close:focus {
+    background-color: var(--button-clicked);
+  }
   &_header {
     user-select: none;
+    pointer-events: none;
     font-size: 1.6em;
     display: flex;
     align-items: flex-start;

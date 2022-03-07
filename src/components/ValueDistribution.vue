@@ -61,7 +61,7 @@ export default defineComponent({
             .axisBottom(xScale)
             .ticks(2)
             .tickFormat((d: string[], i: number) => tickLabels[i])
-            .tickValues([0, 50, 95])
+            .tickValues([0, 45, 95])
         );
 
       const data: (number | string)[][] = [];
@@ -120,7 +120,7 @@ export default defineComponent({
         .datum(startData)
         .attr("d", area)
         .attr("fill", "url(#svgGradient)")
-        .attr("stroke", "white")
+        .attr("stroke", "rgba(255, 255, 255, 0.2")
         .attr("stroke-width", 2)
         .transition()
         .duration(1000)

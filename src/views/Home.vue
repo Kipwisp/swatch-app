@@ -1,141 +1,118 @@
 <template>
+  <div class="background"></div>
   <div class="main">
-    <div class="container centered">
-      <div v-if="!uploading" class="upload-box">
-        <UploadBox v-on:submit-image="uploadFile" />
+    <div class="backdrop">
+      <div>
+        <div class="name">Color App</div>
+        <span class="divider"></span>
+        <div>Color Analysis, Palette Generation, Value Distribution</div>
+        <div>Get started by uploading an image!</div>
       </div>
-      <div v-if="!uploading" class="link-bar">
-        <LinkBar v-on:submit-image="uploadFile" />
-      </div>
-      <div class="loading" v-if="uploading">
-        <Processing />
-      </div>
+      <Button
+        text="Upload"
+        icon="upload"
+        :action="
+          () => {
+            $refs.modal.openModal();
+          }
+        "
+      />
     </div>
   </div>
+  <modal ref="modal" :title="'Image Upload'">
+    <template v-slot:body>
+      <Upload
+        :callback="
+          () => {
+            $refs.modal.closeModal();
+          }
+        "
+      />
+    </template>
+  </modal>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 
-import notify, { errorUpload } from "@/utils/NotificationHandler.ts";
-import UploadBox from "@/components/UploadBox.vue";
-import LinkBar from "@/components/LinkBar.vue";
-import Processing from "@/components/Processing.vue";
+import Upload from "@/components/Upload.vue";
+import Modal from "@/components/Modal.vue";
+import Button from "@/components/Button.vue";
 
 export default defineComponent({
   name: "Home",
   components: {
-    UploadBox,
-    LinkBar,
-    Processing,
+    Upload,
+    Modal,
+    Button,
   },
   data: () => {
     return {
       uploading: false,
     };
   },
-  methods: {
-    async uploadFile(file: File) {
-      try {
-        this.uploading = true;
-        const image = URL.createObjectURL(file);
-        const resized = await this.resizeImage(image);
-        const grayscale = await this.preprocess(image);
-
-        const res = await fetch("http://127.0.0.1:5000/analyze", {
-          method: "POST",
-          body: resized,
-        });
-        const json = await res.json();
-        const stringify = await JSON.stringify(json);
-
-        this.$router.push({
-          name: "Analysis",
-          params: { results: stringify, image: image, grayscale: grayscale },
-        });
-      } catch (error) {
-        notify(errorUpload);
-      }
-
-      this.uploading = false;
-    },
-    async resizeImage(url: string) {
-      const quality = 1;
-      const img = new Image();
-      img.src = url;
-      let data = "";
-      await new Promise((resolve) => {
-        img.onload = async () => {
-          const canvas: HTMLCanvasElement = document.createElement("canvas");
-          const ctx = canvas.getContext("2d");
-
-          if (ctx) {
-            const max = Math.max(img.width, img.height);
-            const scale = max > 128 ? 128 / max : 1;
-
-            canvas.width = img.width * scale;
-            canvas.height = img.height * scale;
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-            data = canvas.toDataURL("image/jpeg", quality);
-          }
-
-          resolve(true);
-        };
-      });
-
-      const blob = await fetch(data).then((r) => r.blob());
-      return new File([blob], "image", { type: "image/jpg" });
-    },
-    async preprocess(url: string) {
-      const img = new Image();
-      img.src = url;
-
-      let data = "";
-      await new Promise((resolve) => {
-        img.onload = async () => {
-          const canvas: HTMLCanvasElement = document.createElement("canvas");
-          const ctx = canvas.getContext("2d");
-
-          if (ctx) {
-            canvas.width = img.width;
-            canvas.height = img.height;
-            ctx.filter = "grayscale(1)";
-
-            ctx.drawImage(img, 0, 0, img.width, img.height);
-            data = canvas.toDataURL("image/png");
-          }
-
-          resolve(true);
-        };
-      });
-
-      return data;
-    },
-  },
 });
 </script>
 
 <style scoped lang="scss">
+.background {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  filter: blur(2px);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  z-index: -1;
+  opacity: 0.4;
+  background-image: url(~@/assets/backdrop.png);
+  animation: fade-in 1s ease;
+}
+.divider {
+  background-color: white;
+  height: 2px;
+  width: 500px;
+}
 .main {
   width: 100%;
   height: 100%;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
+  align-content: center;
 }
-.link-bar {
-  margin-top: 20px;
-}
-.container {
+.backdrop {
+  background-color: var(--glass);
   width: 100%;
-  max-width: 50em;
+  height: 400px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+  gap: 150px;
+  backdrop-filter: blur(25px);
+  animation: enter 1s ease;
+  flex-wrap: wrap;
 }
-.centered {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+.name {
+  font-size: 4em;
+}
+@keyframes enter {
+  from {
+    filter: blur(8px);
+  }
+  to {
+    filter: blur(0px);
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.4;
+  }
 }
 </style>

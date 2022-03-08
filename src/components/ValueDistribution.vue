@@ -66,7 +66,7 @@ export default defineComponent({
             .tickValues([0, 45, 95])
         );
 
-      const data: (number | string)[][] = [];
+      const data: number[][] = [];
 
       Object.values(chartData).forEach((value: Bin) => {
         data.push([value.bin, value.count]);
@@ -74,10 +74,6 @@ export default defineComponent({
 
       const max = d3.max(data, (d: (number | string)[]) => d[1]);
       const yScale = d3.scaleLinear().domain([0, max]).range([height, 0]);
-
-      // svg
-      //   .append("g")
-      //   .call(d3.axisLeft(yScale).ticks(4).tickFormat(d3.format(".1%")));
 
       const defs = svg.append("defs");
 
@@ -132,6 +128,68 @@ export default defineComponent({
             return area(interpolator(d));
           };
         });
+
+      const focus = svg
+        .append("g")
+        .attr("class", "focus")
+        .style("display", "none");
+
+      focus.append("circle").attr("r", 5);
+
+      focus
+        .append("rect")
+        .attr("class", "tooltip")
+        .attr("width", 100)
+        .attr("height", 50)
+        .attr("x", 10)
+        .attr("y", -22)
+        .attr("rx", 4)
+        .attr("ry", 4);
+
+      focus.append("text").attr("class", "tooltip-value");
+
+      focus.append("text").attr("x", 18).attr("y", 18).text("Density:");
+
+      focus
+        .append("text")
+        .attr("class", "tooltip-density")
+        .attr("x", 60)
+        .attr("y", 18);
+
+      svg
+        .append("rect")
+        .attr("class", "overlay")
+        .attr("width", width)
+        .attr("height", height)
+        .on("mouseover", function () {
+          focus.style("display", null);
+        })
+        .on("mouseout", function () {
+          focus.style("display", "none");
+        })
+        .on("mousemove", mousemove);
+
+      function mousemove(event: MouseEvent) {
+        const mouse = d3.pointer(event);
+        const x0 = xScale.invert(mouse[0]);
+
+        if (xScale(x0) < 0 || xScale(x0) > width) {
+          return;
+        }
+
+        const bisect = d3.bisector((d: number[]) => d[0]).left;
+        const i = bisect(data, x0, 1);
+        const d0 = data[i - 1];
+        const d1 = data[i];
+        const d: number[] = x0 - d0[0] > d1[0] - x0 ? d1 : d0;
+
+        focus.attr(
+          "transform",
+          "translate(" + xScale(d[0]) + "," + yScale(d[1]) + ")"
+        );
+        focus.select(".tooltip-value").text(d[1]);
+        focus.select(".tooltip-density").text(d[0]);
+      }
     },
   },
 });
@@ -156,5 +214,25 @@ export default defineComponent({
   user-select: none;
   font-size: 1.4em;
   font-family: Avenir, Helvetica, Arial, sans-serif;
+}
+.chart ::v-deep(.overlay) {
+  fill: none;
+  pointer-events: all;
+}
+.chart ::v-deep(.focus circle) {
+  fill: steelblue;
+}
+
+.chart ::v-deep(.focus text) {
+  font-size: 14px;
+}
+
+.chart ::v-deep(.tooltip) {
+  fill: white;
+  stroke: #000;
+}
+
+.chart ::v-deep(.tooltip-value, .tooltip-density) {
+  font-weight: bold;
 }
 </style>

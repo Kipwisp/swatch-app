@@ -3,7 +3,7 @@
     <div ref="chart" class="chart">
       <template v-for="item in data" :key="item">
         <a :href="'https://www.color-hex.com/color/' + item.hex" target="_blank"
-          ><div class="color" :style="{ 'background-color': item.rgb }">
+          ><div class="color" :style="{ 'background-color': `#${item.hex}` }">
             {{ `#${item.hex}` }}
           </div></a
         >
@@ -17,10 +17,7 @@ import { defineComponent } from "vue";
 import type { PropType } from "vue";
 
 interface Palette {
-  value: number[];
   hex: string;
-  rgb: string;
-  count: number;
 }
 
 export default defineComponent({
@@ -47,9 +44,9 @@ export default defineComponent({
 }
 .color {
   user-select: none;
-  padding: max(3%, 15px) 0;
+  padding: max(3%, 12px) 0;
   width: 100%;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   font-size: 1em;
   border-radius: 15px;
   text-shadow: 2px 2px #000;

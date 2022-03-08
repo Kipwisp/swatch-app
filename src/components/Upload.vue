@@ -81,7 +81,6 @@ export default defineComponent({
       this.uploading = false;
     },
     async resizeImage(url: string) {
-      const quality = 1;
       const img = new Image();
       img.src = url;
       let data = "";
@@ -98,7 +97,7 @@ export default defineComponent({
             canvas.height = img.height * scale;
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-            data = canvas.toDataURL("image/jpeg", quality);
+            data = canvas.toDataURL("image/png");
           }
 
           resolve(true);

@@ -10,11 +10,11 @@ import * as d3 from "d3";
 import type { PropType } from "vue";
 
 interface Cluster {
-  rgb: string;
-  css: string;
-  hex: string;
   polar: number[];
   count: number;
+  hsv: string;
+  hex: string;
+  rgb: string;
 }
 
 export default defineComponent({
@@ -46,14 +46,14 @@ export default defineComponent({
       const angleMarkers = d3.range(0, 360, 45);
 
       const colors = [
-        "yellow",
-        "orange",
-        "red",
-        "magenta",
-        "purple",
-        "blue",
-        "teal",
-        "green",
+        "rgb(127,255,0)",
+        "rgb(255,191,0)",
+        "rgb(255,0,0)",
+        "rgb(255,0,191)",
+        "rgb(127,0,255)",
+        "rgb(0,63,255)",
+        "rgb(0,255,255)",
+        "rgb(0,255,63)",
       ];
 
       const tooltip = d3
@@ -73,7 +73,7 @@ export default defineComponent({
           .style("visibility", "visible");
         tooltip
           .html(
-            `<div>Hex: #${d[4]}</div><div>RGB: ${d[5]}</div><div>Size: ${d[2]}</div>`
+            `<div>Hex: #${d[4]}</div><div>RGB: ${d[5]}</div><div>HSV: ${d[3]}</div><div>Size: ${d[2]}</div>`
           )
           .style("left", event.pageX + 10 + "px !important")
           .style("top", event.pageY + 10 + "px !important")
@@ -150,14 +150,14 @@ export default defineComponent({
         data.push([
           ...value.polar,
           value.count,
-          value.css,
+          value.hsv,
           value.hex,
           value.rgb,
         ]);
       });
 
       const max = d3.max(data, (d: (number | string)[]) => d[2]);
-      const zScale = d3.scaleSqrt().domain([0, max]).range([0, 30]);
+      const zScale = d3.scaleSqrt().domain([2, max]).range([5, 30]);
 
       svg
         .selectAll("point")
@@ -176,13 +176,13 @@ export default defineComponent({
           return "translate(" + [x, y] + ")";
         })
         .attr("fill", (d: number[]) => {
-          const color = d[3];
+          const color = `#${d[4]}`;
           return color;
         })
         .attr("r", 0)
         .transition()
         .attr("r", (d: number[]) => {
-          const size = zScale(Math.max(d[2], 200));
+          const size = zScale(d[2]);
           return size;
         })
         .duration(1000);

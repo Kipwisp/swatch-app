@@ -139,7 +139,7 @@ export default defineComponent({
   position: fixed;
   width: 100vw;
   height: 100vh;
-  filter: blur(2px);
+  filter: blur(8px);
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -156,7 +156,6 @@ export default defineComponent({
   margin: 20px 20px 0px 20px;
   padding: 30px 30px 0px 30px;
   animation: enter 1s ease;
-  backdrop-filter: blur(25px);
 }
 .pad {
   padding-bottom: 10px;
@@ -252,11 +251,9 @@ export default defineComponent({
 }
 @keyframes enter {
   from {
-    filter: blur(8px);
     transform: scale(0.8);
   }
   to {
-    filter: blur(0px);
     transform: scale(1);
   }
 }

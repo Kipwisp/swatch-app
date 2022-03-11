@@ -92,7 +92,6 @@ export default defineComponent({
   justify-content: center;
   align-content: center;
   gap: 150px;
-  backdrop-filter: blur(25px);
   animation: enter 1s ease;
   flex-wrap: wrap;
 }

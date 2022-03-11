@@ -1,6 +1,6 @@
 <template>
   <div class="frame">
-    <img class="pic" :src="data" />
+    <img class="pic" :src="data" target="_blank" />
     <div class="resolution">{{ width }} x {{ height }} px</div>
   </div>
 </template>

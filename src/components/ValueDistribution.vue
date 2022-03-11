@@ -66,29 +66,23 @@ export default defineComponent({
             .tickValues([0, 45, 95])
         );
 
-      const data: number[][] = [];
+      const data: Bin[] = Object.values(chartData);
 
-      Object.values(chartData).forEach((value: Bin) => {
-        data.push([value.bin, value.count]);
-      });
-
-      const max = d3.max(data, (d: (number | string)[]) => d[1]);
+      const max = d3.max(data, (d: Bin) => d.count);
       const yScale = d3.scaleLinear().domain([0, max]).range([height, 0]);
 
       const defs = svg.append("defs");
 
-      const startData = data.map((d) => {
-        return [d[0], 0];
-      });
+      const startData = data.map((d: Bin) => ({ bin: d.bin, count: 0 }));
 
       const area = d3
         .area()
         .curve(d3.curveBasis)
-        .x((d: number[]) => {
-          return xScale(d[0]);
+        .x((d: Bin) => {
+          return xScale(d.bin);
         })
-        .y1((d: number[]) => {
-          return yScale(d[1]);
+        .y1((d: Bin) => {
+          return yScale(d.count);
         })
         .y0(yScale(0));
 
@@ -129,11 +123,29 @@ export default defineComponent({
           };
         });
 
+      const line = d3
+        .line()
+        .curve(d3.curveBasis)
+        .x((d: Bin) => {
+          return xScale(d.bin);
+        })
+        .y((d: Bin) => {
+          return yScale(d.count);
+        });
+
+      svg
+        .append("path")
+        .datum(data)
+        .attr("d", line)
+        .attr("fill", "transparent")
+        .attr("class", "chart-curve");
+
       const focus = svg
         .append("g")
         .attr("class", "focus")
         .style("display", "none");
 
+      // focus.append("line").attr("stroke", "#147F90").attr("fill", "#A6E8F2");
       focus.append("circle").attr("r", 5);
 
       focus
@@ -156,6 +168,54 @@ export default defineComponent({
         .attr("x", 60)
         .attr("y", 18);
 
+      const path = d3.select(".chart-curve").node();
+      const getPoint = (x: number, path: SVGPathElement) => {
+        let from = 0;
+        let to = path.getTotalLength();
+        let current = (from + to) / 2;
+        let point = path.getPointAtLength(current);
+
+        while (Math.abs(point.x - x) > 0.5) {
+          if (point.x < x) from = current;
+          else to = current;
+          current = (from + to) / 2;
+          point = path.getPointAtLength(current);
+        }
+
+        return point;
+      };
+
+      const approx = [...Array(width).keys()].map(
+        (x: number) => getPoint(x, path).y
+      );
+
+      const moveTooltip = (event: MouseEvent) => {
+        const mouse = d3.pointer(event);
+        const x0 = xScale.invert(mouse[0]);
+        console.log();
+        const x = Math.round(mouse[0]);
+
+        if (x < 0 || x >= width) {
+          return;
+        }
+
+        const bisect = d3.bisector((d: Bin) => d.bin).left;
+        const i = bisect(data, x0, 1);
+        const d0 = data[i - 1];
+        const d1 = data[i];
+        const d: Bin = x0 - d0.bin > d1.bin - x0 ? d1 : d0;
+        const t = x0 - d0.bin > d1.bin - x0 ? i : i - 1;
+
+        focus.attr("transform", "translate(" + x + "," + approx[x] + ")");
+        // focus
+        //   .attr("x1", xScale(d.bin))
+        //   .attr("y1", padding / 2)
+        //   .attr("x2", xScale(d.bin))
+        //   .attr("y2", height - padding / 2);
+        focus.select(".tooltip-value").text(yScale.invert(approx[x]));
+        focus.select(".tooltip-density").text(xScale.invert(x));
+      };
+
       svg
         .append("rect")
         .attr("class", "overlay")
@@ -167,29 +227,7 @@ export default defineComponent({
         .on("mouseout", function () {
           focus.style("display", "none");
         })
-        .on("mousemove", mousemove);
-
-      function mousemove(event: MouseEvent) {
-        const mouse = d3.pointer(event);
-        const x0 = xScale.invert(mouse[0]);
-
-        if (xScale(x0) < 0 || xScale(x0) > width) {
-          return;
-        }
-
-        const bisect = d3.bisector((d: number[]) => d[0]).left;
-        const i = bisect(data, x0, 1);
-        const d0 = data[i - 1];
-        const d1 = data[i];
-        const d: number[] = x0 - d0[0] > d1[0] - x0 ? d1 : d0;
-
-        focus.attr(
-          "transform",
-          "translate(" + xScale(d[0]) + "," + yScale(d[1]) + ")"
-        );
-        focus.select(".tooltip-value").text(d[1]);
-        focus.select(".tooltip-density").text(d[0]);
-      }
+        .on("mousemove", moveTooltip);
     },
   },
 });

@@ -141,7 +141,9 @@ export default defineComponent({
             const blob = items[i].getAsFile();
             if (blob) {
               const filetype = blob.type.split("/").pop();
-              this.uploadFile(new File([blob], `image.${filetype}`));
+              this.uploadFile(
+                new File([blob], `image.${filetype}`, { type: blob.type })
+              );
               break;
             }
           }

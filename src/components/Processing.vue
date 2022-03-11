@@ -41,7 +41,6 @@ $speed: 5s;
   height: 5vw;
   margin: 20px;
   border-radius: 100px;
-  box-shadow: 0px 0px 3px #000;
   background-color: #df004f;
   &:nth-child(1) {
     animation: loading $speed 0s ease infinite alternate, begin 0s ease-out;

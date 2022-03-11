@@ -12,9 +12,9 @@ import type { PropType } from "vue";
 interface Cluster {
   polar: number[];
   count: number;
-  hsv: string;
+  hsv: number[];
   hex: string;
-  rgb: string;
+  rgb: number[];
 }
 
 export default defineComponent({
@@ -63,7 +63,7 @@ export default defineComponent({
         .style("visibility", "hidden")
         .attr("class", "tooltip");
 
-      const showTooltip = (event: MouseEvent, d: number[]) => {
+      const showTooltip = (event: MouseEvent, d: Cluster) => {
         const point = event.target as HTMLInputElement;
         d3.select(point).style("stroke", "white");
         tooltip
@@ -73,7 +73,7 @@ export default defineComponent({
           .style("visibility", "visible");
         tooltip
           .html(
-            `<div>Hex: #${d[4]}</div><div>RGB: ${d[5]}</div><div>HSV: ${d[3]}</div><div>Size: ${d[2]}</div>`
+            `<div>Hex: #${d.hex}</div><div>RGB: ${d.rgb}</div><div>HSV: ${d.hsv}</div><div>Size: ${d.count}</div>`
           )
           .style("left", event.pageX + 10 + "px !important")
           .style("top", event.pageY + 10 + "px !important")
@@ -144,20 +144,12 @@ export default defineComponent({
         .attr("class", "radius-tick")
         .attr("r", radiusScale);
 
-      let data: (number | string)[][] = [];
+      const data: Cluster[] = Object.values(chartData);
 
-      Object.values(chartData).forEach((value: Cluster) => {
-        data.push([
-          ...value.polar,
-          value.count,
-          value.hsv,
-          value.hex,
-          value.rgb,
-        ]);
-      });
+      data.sort((a: Cluster, b: Cluster) => a.hsv[2] - b.hsv[2]);
 
-      const max = d3.max(data, (d: (number | string)[]) => d[2]);
-      const zScale = d3.scaleSqrt().domain([2, max]).range([5, 30]);
+      const max = d3.max(data, (d: Cluster) => d["count"]);
+      const zScale = d3.scaleSqrt().domain([2, max]).range([5, 15]);
 
       svg
         .selectAll("point")
@@ -168,21 +160,22 @@ export default defineComponent({
         .on("mousemove", moveTooltip)
         .on("mouseleave", hideTooltip)
         .attr("class", "point")
-        .attr("transform", (d: number[]) => {
-          const angle = d[0],
-            radius = radiusScale(d[1]),
+        .attr("transform", (d: Cluster) => {
+          const angle = d.polar[0],
+            radius = radiusScale(d.polar[1]),
             x = radius * Math.cos(angle),
             y = radius * Math.sin(angle);
           return "translate(" + [x, y] + ")";
         })
-        .attr("fill", (d: number[]) => {
-          const color = `#${d[4]}`;
+        .attr("fill", (d: Cluster) => {
+          const color = `#${d.hex}`;
           return color;
         })
+        .attr("z-index", (d: Cluster) => d.hsv[-1])
         .attr("r", 0)
         .transition()
-        .attr("r", (d: number[]) => {
-          const size = zScale(d[2]);
+        .attr("r", (d: Cluster) => {
+          const size = zScale(d.count);
           return size;
         })
         .duration(1000);

@@ -10,9 +10,9 @@ export const notifyError = (message: string): void => {
   const toast = useToast();
   toast.error(message, {
     position: POSITION.TOP_CENTER,
-    timeout: 5000,
+    timeout: 3000,
     closeOnClick: true,
-    pauseOnFocusLoss: true,
+    pauseOnFocusLoss: false,
     pauseOnHover: true,
     draggable: true,
     draggablePercent: 0.6,
@@ -28,9 +28,9 @@ export const notifySuccess = (message: string): void => {
   const toast = useToast();
   toast.success(message, {
     position: POSITION.TOP_CENTER,
-    timeout: 5000,
+    timeout: 3000,
     closeOnClick: true,
-    pauseOnFocusLoss: true,
+    pauseOnFocusLoss: false,
     pauseOnHover: true,
     draggable: true,
     draggablePercent: 0.6,

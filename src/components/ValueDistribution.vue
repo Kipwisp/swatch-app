@@ -33,10 +33,36 @@ export default defineComponent({
     }
   },
   methods: {
-    renderChart: (chart: HTMLDivElement, chartData: Bin[]) => {
+    getPoint(x: number, path: SVGPathElement) {
+      let from = 0;
+      let to = path.getTotalLength();
+      let current = (from + to) / 2;
+      let point = path.getPointAtLength(current);
+      const max_iterations = 25;
+
+      let i = 0;
+      while (Math.abs(point.x - x) > 0.5 && i < max_iterations) {
+        if (point.x < x) from = current;
+        else to = current;
+        current = (from + to) / 2;
+        point = path.getPointAtLength(current);
+        i++;
+      }
+
+      return point;
+    },
+    renderChart(chart: HTMLDivElement, chartData: Bin[]) {
       const height = 325;
       const width = 325;
       const padding = 60;
+
+      const data: Bin[] = Object.values(chartData);
+      const startData = data.map((d: Bin) => ({ bin: d.bin, count: 0 }));
+      const max = d3.max(data, (d: Bin) => d.count);
+
+      const tickLabels = ["Shadow", "Midtone", "Light"];
+      const xScale = d3.scaleLinear().domain([0, 100]).range([0, width]);
+      const yScale = d3.scaleLinear().domain([0, max]).range([height, 0]);
 
       const svg = d3
         .select(chart)
@@ -52,9 +78,80 @@ export default defineComponent({
           "translate(" + padding / 2 + "," + padding / 2 + ")"
         );
 
-      const xScale = d3.scaleLinear().domain([0, 95]).range([0, width]);
+      const tooltip = d3
+        .select(chart)
+        .append("div")
+        .style("opacity", 0)
+        .style("visibility", "hidden")
+        .attr("class", "tooltip");
 
-      const tickLabels = ["Shadow", "Midtone", "Light"];
+      const line = d3
+        .line()
+        .curve(d3.curveBasis)
+        .x((d: Bin) => {
+          return xScale(d.bin);
+        })
+        .y((d: Bin) => {
+          return yScale(d.count);
+        });
+
+      svg
+        .append("path")
+        .datum(data)
+        .attr("d", line)
+        .attr("fill", "transparent")
+        .attr("class", "chart-curve");
+
+      const path = d3.select(".chart-curve").node();
+      const curveValues = [...Array(101).keys()].map(
+        (x: number) => this.getPoint(Math.round(xScale(x)), path).y
+      );
+
+      const showTooltip = () => {
+        focus.style("display", null);
+        tooltip
+          .transition()
+          .duration(200)
+          .style("opacity", 1)
+          .style("visibility", "visible");
+      };
+
+      const moveTooltip = (event: MouseEvent) => {
+        const mouse = d3.pointer(event);
+        const x = mouse[0];
+
+        const value = Math.round(xScale.invert(x));
+        const prob =
+          Math.round(yScale.invert(curveValues[value]) * 10000) / 100;
+
+        const pos = (
+          svg.select(".hover-dot").node() as HTMLDivElement
+        ).getBoundingClientRect();
+
+        svg
+          .select(".hover-dot")
+          .attr("transform", "translate(" + x + "," + curveValues[value] + ")");
+        svg
+          .select(".hover-line")
+          .attr("x1", x)
+          .attr("y1", 0)
+          .attr("x2", x)
+          .attr("y2", height);
+        tooltip
+          .html(`<div>Value: ${value}</div><div>Probability: ${prob}%</div>`)
+          .style("left", event.pageX + 10 + "px")
+          .style("top", pos.y + window.scrollY - 22 + "px");
+      };
+
+      const hideTooltip = () => {
+        focus.style("display", "none");
+        tooltip
+          .transition()
+          .duration(200)
+          .style("opacity", 0)
+          .style("visibility", "hidden");
+      };
+
       svg
         .append("g")
         .attr("transform", "translate(0," + height + ")")
@@ -63,30 +160,10 @@ export default defineComponent({
             .axisBottom(xScale)
             .ticks(2)
             .tickFormat((d: string[], i: number) => tickLabels[i])
-            .tickValues([0, 45, 95])
+            .tickValues([0, 50, 100])
         );
 
-      const data: Bin[] = Object.values(chartData);
-
-      const max = d3.max(data, (d: Bin) => d.count);
-      const yScale = d3.scaleLinear().domain([0, max]).range([height, 0]);
-
-      const defs = svg.append("defs");
-
-      const startData = data.map((d: Bin) => ({ bin: d.bin, count: 0 }));
-
-      const area = d3
-        .area()
-        .curve(d3.curveBasis)
-        .x((d: Bin) => {
-          return xScale(d.bin);
-        })
-        .y1((d: Bin) => {
-          return yScale(d.count);
-        })
-        .y0(yScale(0));
-
-      const gradient = defs
+      const gradient = svg
         .append("linearGradient")
         .attr("id", "svgGradient")
         .attr("x1", "0%")
@@ -107,6 +184,17 @@ export default defineComponent({
         .attr("stop-color", "white")
         .attr("stop-opacity", 1);
 
+      const area = d3
+        .area()
+        .curve(d3.curveBasis)
+        .x((d: Bin) => {
+          return xScale(d.bin);
+        })
+        .y1((d: Bin) => {
+          return yScale(d.count);
+        })
+        .y0(yScale(0));
+
       svg
         .append("path")
         .datum(startData)
@@ -123,111 +211,22 @@ export default defineComponent({
           };
         });
 
-      const line = d3
-        .line()
-        .curve(d3.curveBasis)
-        .x((d: Bin) => {
-          return xScale(d.bin);
-        })
-        .y((d: Bin) => {
-          return yScale(d.count);
-        });
-
-      svg
-        .append("path")
-        .datum(data)
-        .attr("d", line)
-        .attr("fill", "transparent")
-        .attr("class", "chart-curve");
-
       const focus = svg
         .append("g")
         .attr("class", "focus")
         .style("display", "none");
 
-      // focus.append("line").attr("stroke", "#147F90").attr("fill", "#A6E8F2");
-      focus.append("circle").attr("r", 5);
-
-      focus
-        .append("rect")
-        .attr("class", "tooltip")
-        .attr("width", 100)
-        .attr("height", 50)
-        .attr("x", 10)
-        .attr("y", -22)
-        .attr("rx", 4)
-        .attr("ry", 4);
-
-      focus.append("text").attr("class", "tooltip-value");
-
-      focus.append("text").attr("x", 18).attr("y", 18).text("Density:");
-
-      focus
-        .append("text")
-        .attr("class", "tooltip-density")
-        .attr("x", 60)
-        .attr("y", 18);
-
-      const path = d3.select(".chart-curve").node();
-      const getPoint = (x: number, path: SVGPathElement) => {
-        let from = 0;
-        let to = path.getTotalLength();
-        let current = (from + to) / 2;
-        let point = path.getPointAtLength(current);
-
-        while (Math.abs(point.x - x) > 0.5) {
-          if (point.x < x) from = current;
-          else to = current;
-          current = (from + to) / 2;
-          point = path.getPointAtLength(current);
-        }
-
-        return point;
-      };
-
-      const approx = [...Array(width).keys()].map(
-        (x: number) => getPoint(x, path).y
-      );
-
-      const moveTooltip = (event: MouseEvent) => {
-        const mouse = d3.pointer(event);
-        const x0 = xScale.invert(mouse[0]);
-        console.log();
-        const x = Math.round(mouse[0]);
-
-        if (x < 0 || x >= width) {
-          return;
-        }
-
-        const bisect = d3.bisector((d: Bin) => d.bin).left;
-        const i = bisect(data, x0, 1);
-        const d0 = data[i - 1];
-        const d1 = data[i];
-        const d: Bin = x0 - d0.bin > d1.bin - x0 ? d1 : d0;
-        const t = x0 - d0.bin > d1.bin - x0 ? i : i - 1;
-
-        focus.attr("transform", "translate(" + x + "," + approx[x] + ")");
-        // focus
-        //   .attr("x1", xScale(d.bin))
-        //   .attr("y1", padding / 2)
-        //   .attr("x2", xScale(d.bin))
-        //   .attr("y2", height - padding / 2);
-        focus.select(".tooltip-value").text(yScale.invert(approx[x]));
-        focus.select(".tooltip-density").text(xScale.invert(x));
-      };
+      focus.append("line").attr("class", "hover-line");
+      focus.append("circle").attr("class", "hover-dot").attr("r", 5);
 
       svg
         .append("rect")
         .attr("class", "overlay")
         .attr("width", width)
         .attr("height", height)
-        .on("mouseover", function () {
-          focus.style("display", null);
-        })
-        .on("mouseout", function () {
-          focus.style("display", "none");
-        })
-        .on("mousemove", moveTooltip);
+        .on("mouseover", showTooltip)
+        .on("mousemove", moveTooltip)
+        .on("mouseleave", hideTooltip);
     },
   },
 });
@@ -241,7 +240,6 @@ export default defineComponent({
   width: 80vw;
 }
 .chart {
-  font-size: 1.6em;
   width: 100%;
   height: 100%;
 }
@@ -257,8 +255,11 @@ export default defineComponent({
   fill: none;
   pointer-events: all;
 }
-.chart ::v-deep(.focus circle) {
+.chart ::v-deep(.focus .hover-dot) {
   fill: steelblue;
+}
+.chart ::v-deep(.focus .hover-line) {
+  stroke: steelblue;
 }
 
 .chart ::v-deep(.focus text) {
@@ -266,11 +267,13 @@ export default defineComponent({
 }
 
 .chart ::v-deep(.tooltip) {
-  fill: white;
-  stroke: #000;
-}
-
-.chart ::v-deep(.tooltip-value, .tooltip-density) {
-  font-weight: bold;
+  position: fixed;
+  background-color: var(--tooltip);
+  border-radius: 5px;
+  padding: 10px;
+  color: white;
+  user-select: none;
+  text-align: left;
+  pointer-events: none;
 }
 </style>

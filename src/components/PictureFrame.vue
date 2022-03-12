@@ -38,7 +38,7 @@ export default defineComponent({
     }
   },
   methods: {
-    loadImage: async (imgData: string): Promise<number[]> => {
+    async loadImage(imgData: string): Promise<number[]> {
       const img = new Image();
       img.src = imgData;
       let dimensions = [] as number[];

@@ -50,7 +50,10 @@ export default defineComponent({
           const blob = await response.blob();
           if (blob.type.startsWith("image/")) {
             const filetype = blob.type.split("/").pop();
-            this.$emit("submit-image", new File([blob], `image.${filetype}`));
+            this.$emit(
+              "submit-image",
+              new File([blob], `image.${filetype}`, { type: blob.type })
+            );
           } else {
             throw "Invalid Response";
           }

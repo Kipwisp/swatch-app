@@ -28,7 +28,7 @@ export default defineComponent({
     }
   },
   watch: {
-    data: function () {
+    data() {
       if (this.data) {
         d3.select(this.$refs.chart).selectAll("div").remove();
         this.renderChart(this.$refs.chart as HTMLDivElement, this.data);
@@ -36,14 +36,20 @@ export default defineComponent({
     },
   },
   methods: {
-    renderChart: (chart: HTMLDivElement, chartData: Cluster[]) => {
+    renderChart(chart: HTMLDivElement, chartData: Cluster[]) {
       const size = 380;
       const padding = 35;
       const dotSize = 12;
 
+      const data: Cluster[] = Object.values(chartData);
+      data.sort((a: Cluster, b: Cluster) => a.hsv[2] - b.hsv[2]);
+      const max = d3.max(data, (d: Cluster) => d["count"]);
+
       const radius = size / 2 - padding;
       const radiusScale = d3.scaleLinear().domain([0, 1]).range([0, radius]);
       const angleMarkers = d3.range(0, 360, 45);
+
+      const zScale = d3.scaleSqrt().domain([2, max]).range([5, 15]);
 
       const colors = [
         "rgb(127,255,0)",
@@ -71,13 +77,9 @@ export default defineComponent({
           .duration(200)
           .style("opacity", 1)
           .style("visibility", "visible");
-        tooltip
-          .html(
-            `<div>Hex: #${d.hex}</div><div>RGB: ${d.rgb}</div><div>HSV: ${d.hsv}</div><div>Size: ${d.count}</div>`
-          )
-          .style("left", event.pageX + 10 + "px !important")
-          .style("top", event.pageY + 10 + "px !important")
-          .style("text-align", "left");
+        tooltip.html(
+          `<div>Hex: #${d.hex}</div><div>RGB: ${d.rgb}</div><div>HSV: ${d.hsv}</div><div>Size: ${d.count}</div>`
+        );
       };
       const moveTooltip = (event: MouseEvent) => {
         tooltip
@@ -144,13 +146,6 @@ export default defineComponent({
         .attr("class", "radius-tick")
         .attr("r", radiusScale);
 
-      const data: Cluster[] = Object.values(chartData);
-
-      data.sort((a: Cluster, b: Cluster) => a.hsv[2] - b.hsv[2]);
-
-      const max = d3.max(data, (d: Cluster) => d["count"]);
-      const zScale = d3.scaleSqrt().domain([2, max]).range([5, 15]);
-
       svg
         .selectAll("point")
         .data(data)
@@ -202,6 +197,8 @@ export default defineComponent({
   padding: 10px;
   color: white;
   user-select: none;
+  text-align: left;
+  pointer-events: none;
 }
 .chart ::v-deep(.point) {
   stroke: none;

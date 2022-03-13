@@ -1,5 +1,5 @@
 <template>
-  <button v-on:click="action" class="button">
+  <button :style="styling" v-on:click="action" class="button">
     <unicon :name="icon" fill="white" width="1.2em" height="1.2em"></unicon
     >{{ text }}
   </button>
@@ -14,6 +14,22 @@ export default defineComponent({
     action: Function,
     text: String,
     icon: String,
+    type: String,
+  },
+  computed: {
+    styling() {
+      return this.type === "Primary"
+        ? {
+            "--color": "var(--button-primary-bg)",
+            "--color-hover": "var(--button-primary-hover)",
+            "--color-clicked": "var(--button-primary-clicked)",
+          }
+        : {
+            "--color": "var(--button-bg)",
+            "--color-hover": "var(--button-hover)",
+            "--color-clicked": "var(--button-clicked)",
+          };
+    },
   },
 });
 </script>
@@ -34,15 +50,15 @@ export default defineComponent({
   height: 50px;
   border: none;
   border-radius: 15px;
-  background-color: var(--button-bg);
+  background-color: var(--color);
   transition: background-color 0.2s;
   box-shadow: 0px 0px 3px #000;
   cursor: pointer;
 }
 .button:hover {
-  background-color: var(--button-hover);
+  background-color: var(--color-hover);
 }
 .button:focus {
-  background-color: var(--button-clicked);
+  background-color: var(--color-clicked);
 }
 </style>

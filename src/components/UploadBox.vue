@@ -24,7 +24,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { notifyError, errorType } from "@/utils/NotificationHandler.ts";
+import { notifyError, errorType } from "@/utils/NotificationHandler";
 
 export default defineComponent({
   name: "UploadBox",

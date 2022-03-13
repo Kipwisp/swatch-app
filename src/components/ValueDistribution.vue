@@ -140,7 +140,7 @@ export default defineComponent({
         tooltip
           .html(`<div>Value: ${value}</div><div>Probability: ${prob}%</div>`)
           .style("left", event.pageX + 10 + "px")
-          .style("top", pos.y + window.scrollY - 22 + "px");
+          .style("top", window.scrollY + pos.y - 22 + "px");
       };
 
       const hideTooltip = () => {
@@ -256,10 +256,10 @@ export default defineComponent({
   pointer-events: all;
 }
 .chart ::v-deep(.focus .hover-dot) {
-  fill: steelblue;
+  fill: rgb(255, 86, 74);
 }
 .chart ::v-deep(.focus .hover-line) {
-  stroke: steelblue;
+  stroke: rgb(255, 86, 74);
 }
 
 .chart ::v-deep(.focus text) {
@@ -267,7 +267,7 @@ export default defineComponent({
 }
 
 .chart ::v-deep(.tooltip) {
-  position: fixed;
+  position: absolute;
   background-color: var(--tooltip);
   border-radius: 5px;
   padding: 10px;

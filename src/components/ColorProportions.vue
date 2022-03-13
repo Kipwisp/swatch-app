@@ -15,6 +15,7 @@ interface Cluster {
   hsv: number[];
   hex: string;
   rgb: number[];
+  pos: number[];
 }
 
 export default defineComponent({
@@ -49,7 +50,7 @@ export default defineComponent({
       const radiusScale = d3.scaleLinear().domain([0, 1]).range([0, radius]);
       const angleMarkers = d3.range(0, 360, 45);
 
-      const zScale = d3.scaleSqrt().domain([2, max]).range([5, 15]);
+      const zScale = d3.scaleSqrt().domain([2, max]).range([5, 20]);
 
       const colors = [
         "rgb(127,255,0)",
@@ -70,8 +71,9 @@ export default defineComponent({
         .attr("class", "tooltip");
 
       const showTooltip = (event: MouseEvent, d: Cluster) => {
-        const point = event.target as HTMLInputElement;
+        const point = event.target as SVGElement;
         d3.select(point).style("stroke", "white");
+        this.$emitter.emit("colorSelect", d.pos);
         tooltip
           .transition()
           .duration(200)
@@ -87,7 +89,7 @@ export default defineComponent({
           .style("top", event.pageY + 10 + "px");
       };
       const hideTooltip = (event: MouseEvent) => {
-        const point = event.target as HTMLInputElement;
+        const point = event.target as SVGElement;
         d3.select(point).style("stroke", "none");
         tooltip
           .transition()
@@ -191,7 +193,7 @@ export default defineComponent({
   font-size: 1.6em;
 }
 .chart ::v-deep(.tooltip) {
-  position: fixed;
+  position: absolute;
   background-color: var(--tooltip);
   border-radius: 5px;
   padding: 10px;

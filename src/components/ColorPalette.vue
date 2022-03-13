@@ -3,7 +3,11 @@
     <div ref="chart" class="chart">
       <template v-for="item in colorNames" :key="item">
         <a :href="'https://www.color-hex.com/color/' + item.hex" target="_blank"
-          ><div class="color" :style="{ 'background-color': `#${item.hex}` }">
+          ><div
+            @mouseenter="() => onHover(item.pos)"
+            class="color"
+            :style="{ 'background-color': `#${item.hex}` }"
+          >
             {{ `${item.name}` }}
           </div></a
         >
@@ -19,6 +23,7 @@ import namer from "color-namer";
 
 interface Palette {
   hex: string;
+  pos: number[];
 }
 
 export default defineComponent({
@@ -30,16 +35,16 @@ export default defineComponent({
   },
   computed: {
     colorNames() {
-      console.log(
-        this.data?.map((x) => ({
-          name: namer(x.hex),
-          hex: x.hex,
-        }))
-      );
       return this.data?.map((x) => ({
         name: namer(x.hex, { pick: ["ntc"] }).ntc[0].name,
         hex: x.hex,
+        pos: x.pos,
       }));
+    },
+  },
+  methods: {
+    onHover(pos: number[]) {
+      this.$emitter.emit("colorSelect", pos);
     },
   },
 });

@@ -26,7 +26,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import ToolTip from "./ToolTip.vue";
-import { notifyError, errorFetch } from "@/utils/NotificationHandler.ts";
+import { notifyError, errorFetch } from "@/utils/NotificationHandler";
 
 export default defineComponent({
   name: "LinkBar",

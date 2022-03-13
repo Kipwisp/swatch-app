@@ -2,7 +2,7 @@ import { createApp } from "vue";
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
 import Unicon from "vue-unicons";
-import mitt from "mitt";
+import emitter from "./utils/EventHandler";
 import App from "./App.vue";
 import router from "./router";
 import {
@@ -14,8 +14,6 @@ import {
 } from "vue-unicons/dist/icons";
 import "bootstrap/dist/js/bootstrap.min.js";
 import "bootstrap";
-
-const emitter = mitt();
 
 Unicon.add([uniImageUpload, uniClipboard, uniTimes, uniUpload, uniEstate]);
 

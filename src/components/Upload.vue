@@ -27,7 +27,7 @@ import {
   notifyError,
   successUpload,
   errorUpload,
-} from "@/utils/NotificationHandler.ts";
+} from "@/utils/NotificationHandler";
 import UploadBox from "@/components/UploadBox.vue";
 import LinkBar from "@/components/LinkBar.vue";
 import Processing from "@/components/Processing.vue";
@@ -52,19 +52,25 @@ export default defineComponent({
   },
   methods: {
     async uploadFile(file: File) {
+      const apiURL =
+        process.env.NODE_ENV === "development"
+          ? "http://127.0.0.1:5000/analyze"
+          : "";
+
       try {
         this.uploading = true;
         const image = URL.createObjectURL(file);
         const resized = await this.resizeImage(image);
         const grayscale = await this.preprocess(image);
 
-        const res = await fetch("http://127.0.0.1:5000/analyze", {
+        const res = await fetch(apiURL, {
           method: "POST",
           body: resized,
         });
         const json = await res.json();
         const stringify = await JSON.stringify(json);
 
+        notifySuccess(successUpload);
         this.$router.push({
           name: "Analysis",
           params: { results: stringify, image: image, grayscale: grayscale },
@@ -77,27 +83,29 @@ export default defineComponent({
         this.callback();
       }
 
-      notifySuccess(successUpload);
       this.uploading = false;
     },
     async resizeImage(url: string) {
       const img = new Image();
       img.src = url;
+
       let data = "";
       await new Promise((resolve) => {
         img.onload = async () => {
           const canvas: HTMLCanvasElement = document.createElement("canvas");
           const ctx = canvas.getContext("2d");
+          const max_size = 150;
 
           if (ctx) {
             const max = Math.max(img.width, img.height);
-            const scale = max > 128 ? 128 / max : 1;
+            const scale = max > max_size ? max_size / max : 1;
 
             canvas.width = img.width * scale;
             canvas.height = img.height * scale;
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
             data = canvas.toDataURL("image/png");
+            console.log(data);
           }
 
           resolve(true);

@@ -1,15 +1,16 @@
 :root {
-    --main-bg: #3a3a3a;
-    --main: #394997;
+    --main-bg: #252525;
     --accent-1: #636363;
-    --accent-2: #161616;
-    --accent-3: #a0a0a0;
     --glass: rgba(156, 80, 80, 0.2);
     --card-bg: rgba(32, 32, 32, 0.8);
     --modal-bg: rgba(32, 32, 32, 1);
     --button-bg: rgba(32, 32, 32, 0.8);
     --button-hover: rgba(58, 58, 58, 0.8);
     --button-clicked: rgba(94, 94, 94, 0.8);
+    --button-primary-bg: rgba(211, 82, 82, 0.8);
+    --button-primary-hover: rgba(235, 112, 112, 0.8);
+    --button-primary-clicked: rgba(255, 157, 157, 0.8);
     --pic-res: rgb(32, 32, 32);
     --tooltip: #141414;
+    --text-light: #afafaf;
 }

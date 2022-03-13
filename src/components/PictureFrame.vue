@@ -1,6 +1,7 @@
 <template>
+  <span v-if="toolTip" ref="pixelhover" class="pixel-hover" />
   <div class="frame">
-    <img class="pic" :src="data" target="_blank" />
+    <img ref="img" class="pic" :src="data" target="_blank" />
     <div class="resolution">{{ width }} x {{ height }} px</div>
   </div>
 </template>
@@ -12,6 +13,7 @@ export default defineComponent({
   name: "PictureFrame",
   props: {
     data: String,
+    toolTip: Boolean,
   },
   data() {
     return {
@@ -36,6 +38,15 @@ export default defineComponent({
         this.height = dimensions[1];
       });
     }
+
+    if (this.toolTip) {
+      this.$emitter.on("colorSelect", (event: number[]) => {
+        this.moveTooltip(event);
+      });
+    }
+  },
+  unmounted() {
+    if (this.toolTip) this.$emitter.off("colorSelect");
   },
   methods: {
     async loadImage(imgData: string): Promise<number[]> {
@@ -50,6 +61,20 @@ export default defineComponent({
       });
 
       return dimensions;
+    },
+    moveTooltip(pos: number[]) {
+      const [x, y] = pos;
+      const hover = this.$refs.pixelhover as HTMLSpanElement;
+      const rect = (this.$refs.img as HTMLDivElement).getBoundingClientRect();
+      const max_size = 150;
+
+      const scale =
+        this.height > this.width
+          ? rect.height / Math.min(max_size, this.height)
+          : rect.width / Math.min(max_size, this.width);
+
+      hover.style.top = `${window.scrollY + rect.y + y * scale - 10}px`;
+      hover.style.left = `${window.scrollX + rect.x + x * scale - 10}px`;
     },
   },
 });
@@ -74,5 +99,16 @@ export default defineComponent({
   align-self: flex-end;
   border-radius: 0 0 5px 5px;
   user-select: none;
+}
+.pixel-hover {
+  position: absolute;
+  border-radius: 5px;
+  background-color: white;
+  border: 2px black solid;
+  pointer-events: none;
+  width: 20px;
+  height: 20px;
+  opacity: 0.4;
+  z-index: 1;
 }
 </style>

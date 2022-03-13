@@ -1,16 +1,20 @@
 <template>
-  <div class="background"></div>
   <div class="main">
     <div class="backdrop">
-      <div>
-        <div class="name">Color App</div>
-        <span class="divider"></span>
-        <div>Color Analysis, Palette Generation, Value Distribution</div>
-        <div>Get started by uploading an image!</div>
+      <div class="title-container">
+        <img class="logo" src="@/assets/img/logo.png" />
+        <div class="subtitle">Color Analysis and Palette Generation</div>
+      </div>
+
+      <div class="text">
+        Curious about the colors of an image? Swatch will analyze an image for
+        you featuring interactive charts for color proportions, color palettes,
+        and value distributions! Get started by uploading an image!
       </div>
       <Button
         text="Upload"
         icon="upload"
+        type="Primary"
         :action="
           () => {
             $refs.modal.openModal();
@@ -18,6 +22,10 @@
         "
       />
     </div>
+    <div
+      :style="{ 'background-image': selectedBackground }"
+      class="background"
+    />
   </div>
   <modal ref="modal" :title="'Image Upload'">
     <template v-slot:body>
@@ -46,72 +54,95 @@ export default defineComponent({
     Modal,
     Button,
   },
-  data: () => {
+  data: function () {
     return {
-      uploading: false,
+      title: "Home - Swatch",
+      backgrounds: [
+        "background_1.jpg",
+        "background_2.jpg",
+        "background_3.jpg",
+        "background_4.jpg",
+      ],
     };
+  },
+  computed: {
+    selectedBackground(): string {
+      const selected =
+        this.backgrounds[Math.floor(Math.random() * this.backgrounds.length)];
+
+      return `url(${require(`@/assets/img/${selected}`)})`;
+    },
+  },
+  mounted() {
+    document.title = this.title;
   },
 });
 </script>
 
 <style scoped lang="scss">
 .background {
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  filter: blur(2px);
+  width: 100%;
+  height: 100%;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  z-index: -1;
-  opacity: 0.4;
-  background-image: url(~@/assets/backdrop.png);
-  animation: fade-in 1s ease;
-}
-.divider {
-  background-color: white;
-  height: 2px;
-  width: 500px;
+  opacity: 0.6;
+  animation: fade-in 3s ease-out;
 }
 .main {
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  align-content: center;
+  background-color: rgb(255, 223, 209);
 }
 .backdrop {
-  background-color: var(--glass);
-  width: 100%;
-  height: min(400px, 50%);
+  width: min(100%, 700px);
+  height: 100%;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  align-content: center;
-  gap: 150px;
-  animation: enter 1s ease;
+  justify-items: center;
+  gap: min(20px, 1%);
+  background-color: var(--main-bg);
+  border-right: 5px var(--modal-bg) solid;
   flex-wrap: wrap;
 }
-.name {
-  font-size: 4em;
+@media only screen and (max-width: 550px) {
+  .background {
+    width: 0%;
+  }
+  .backdrop {
+    border-right: none;
+  }
 }
-@keyframes enter {
-  from {
-    filter: blur(8px);
-  }
-  to {
-    filter: blur(0px);
-  }
+.logo {
+  width: min(300px, 35vh);
+  height: auto;
+}
+.title-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.subtitle {
+  font-size: 1.2em;
+  margin-bottom: 30px;
+}
+.text {
+  font-size: 1em;
+  color: var(--text-light);
+  width: min(500px, 90%);
+  margin-bottom: 20px;
 }
 @keyframes fade-in {
   from {
     opacity: 0;
   }
   to {
-    opacity: 0.4;
+    opacity: 0.6;
   }
 }
 </style>

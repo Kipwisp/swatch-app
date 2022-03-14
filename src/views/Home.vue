@@ -7,9 +7,10 @@
       </div>
 
       <div class="text">
-        Curious about the colors of an image? Swatch will analyze an image for
-        you featuring interactive charts for color proportions, color palettes,
-        and value distributions! Get started by uploading an image!
+        Captivated by the colors of an image? With Swatch, you can generate
+        color palettes, plot color proportions, and visualize value
+        distributions for a quick and easy color analysis! Get started by
+        uploading an image!
       </div>
       <Button
         text="Upload"

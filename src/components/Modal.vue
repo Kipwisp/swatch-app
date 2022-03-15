@@ -79,7 +79,7 @@ export default defineComponent({
     z-index: 2;
     padding: 20px 40px 40px 40px;
     width: 75%;
-    height: 75%;
+    height: auto;
   }
   &_close {
     padding: 0;
@@ -103,7 +103,7 @@ export default defineComponent({
     align-items: flex-start;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 20px;
+    margin-bottom: min(20px, 2%);
   }
   &_body {
     height: 100%;

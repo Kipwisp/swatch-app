@@ -31,7 +31,7 @@
       <div class="row">
         <Card v-if="image" title="Image">
           <template v-slot:component>
-            <PictureFrame :data="image" :toolTip="true" />
+            <PictureFrame :data="image" :grayScale="false" :toolTip="true" />
           </template>
         </Card>
         <Card v-if="results" title="Color Proportions">
@@ -46,9 +46,9 @@
         </Card>
       </div>
       <div class="row">
-        <Card v-if="grayscale" title="Values">
+        <Card v-if="image" title="Values">
           <template v-slot:component>
-            <PictureFrame :data="grayscale" :toolTip="false" />
+            <PictureFrame :data="image" :grayScale="true" :toolTip="false" />
           </template>
         </Card>
         <Card v-if="results" title="Value Distribution">
@@ -99,7 +99,6 @@ export default defineComponent({
   props: {
     results: String,
     image: String,
-    grayscale: String,
   },
   data: function () {
     return {
@@ -123,7 +122,7 @@ export default defineComponent({
   },
   mounted() {
     document.title = this.title;
-    if (!this.results || !this.image || !this.grayscale) {
+    if (!this.results || !this.image) {
       this.$router.push({ name: "Home" });
     }
   },

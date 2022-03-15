@@ -1,8 +1,16 @@
 <template>
   <span v-if="toolTip" ref="pixelhover" class="pixel-hover" />
   <div class="frame">
-    <img ref="img" class="pic" :src="data" target="_blank" />
-    <div class="resolution">{{ width }} x {{ height }} px</div>
+    <img
+      ref="img"
+      :style="grayScale ? { filter: 'grayscale(1)' } : {}"
+      class="pic"
+      :src="data"
+      target="_blank"
+    />
+    <div v-if="!grayScale" class="resolution">
+      {{ width }} x {{ height }} px
+    </div>
   </div>
 </template>
 
@@ -14,6 +22,7 @@ export default defineComponent({
   props: {
     data: String,
     toolTip: Boolean,
+    grayScale: Boolean,
   },
   data() {
     return {

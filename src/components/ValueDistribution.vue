@@ -124,10 +124,6 @@ export default defineComponent({
         const prob =
           Math.round(yScale.invert(curveValues[value]) * 10000) / 100;
 
-        const pos = (
-          svg.select(".hover-dot").node() as HTMLDivElement
-        ).getBoundingClientRect();
-
         svg
           .select(".hover-dot")
           .attr("transform", "translate(" + x + "," + curveValues[value] + ")");
@@ -137,6 +133,11 @@ export default defineComponent({
           .attr("y1", 0)
           .attr("x2", x)
           .attr("y2", height);
+
+        const pos = (
+          svg.select(".hover-dot").node() as HTMLDivElement
+        ).getBoundingClientRect();
+
         tooltip
           .html(`<div>Value: ${value}</div><div>Probability: ${prob}%</div>`)
           .style("left", event.pageX + 10 + "px")

@@ -99,7 +99,7 @@ export default defineComponent({
 }
 .backdrop {
   width: min(100%, 700px);
-  height: 100%;
+  height: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -108,14 +108,21 @@ export default defineComponent({
   gap: min(20px, 1%);
   background-color: var(--main-bg);
   border-right: 5px var(--modal-bg) solid;
-  flex-wrap: wrap;
 }
-@media only screen and (max-width: 550px) {
+@media only screen and (max-width: 600px) {
   .background {
     width: 0%;
   }
   .backdrop {
     border-right: none;
+  }
+}
+@media only screen and (max-height: 350px) {
+  .main {
+    height: auto;
+  }
+  .backdrop {
+    padding: 20px 0px;
   }
 }
 .logo {

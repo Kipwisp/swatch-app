@@ -86,7 +86,7 @@ input[type="file"] {
   left: 0;
 }
 .image {
-  margin-bottom: 40px;
+  margin-bottom: min(40px, 5%);
 }
 .upload {
   position: relative;

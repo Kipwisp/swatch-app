@@ -48,7 +48,13 @@ export default defineComponent({
     };
   },
   mounted() {
-    (this.$refs.pasteboard as HTMLDivElement).focus();
+    if (
+      !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      )
+    ) {
+      (this.$refs.pasteboard as HTMLDivElement).focus();
+    }
   },
   methods: {
     async uploadFile(file: File) {
@@ -58,7 +64,6 @@ export default defineComponent({
         this.uploading = true;
         const image = URL.createObjectURL(file);
         const resized = await this.resizeImage(image);
-        const grayscale = await this.preprocess(image);
 
         const res = await fetch(apiURL, {
           method: "POST",
@@ -70,7 +75,7 @@ export default defineComponent({
         notifySuccess(successUpload);
         this.$router.push({
           name: "Analysis",
-          params: { results: stringify, image: image, grayscale: grayscale },
+          params: { results: stringify, image: image },
         });
       } catch (error) {
         notifyError(errorUpload);
@@ -112,31 +117,6 @@ export default defineComponent({
       const blob = await fetch(data).then((r) => r.blob());
       return new File([blob], "image", { type: "image/jpg" });
     },
-    async preprocess(url: string) {
-      const img = new Image();
-      img.src = url;
-
-      let data = "";
-      await new Promise((resolve) => {
-        img.onload = async () => {
-          const canvas: HTMLCanvasElement = document.createElement("canvas");
-          const ctx = canvas.getContext("2d");
-
-          if (ctx) {
-            canvas.width = img.width;
-            canvas.height = img.height;
-            ctx.filter = "grayscale(1)";
-
-            ctx.drawImage(img, 0, 0, img.width, img.height);
-            data = canvas.toDataURL("image/png");
-          }
-
-          resolve(true);
-        };
-      });
-
-      return data;
-    },
     getImageFromClipboard(event: ClipboardEvent) {
       const items = event?.clipboardData?.items;
 
@@ -169,7 +149,7 @@ export default defineComponent({
   height: 100%;
 }
 .link-bar {
-  margin-top: 20px;
+  margin-top: min(20px, 2%);
 }
 .container {
   width: 100%;
@@ -183,5 +163,10 @@ export default defineComponent({
   opacity: 0;
   z-index: -1;
   cursor: default;
+}
+@media only screen and (max-width: 760px) {
+  .paste {
+    user-select: none;
+  }
 }
 </style>

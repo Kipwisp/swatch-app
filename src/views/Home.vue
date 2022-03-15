@@ -57,7 +57,7 @@ export default defineComponent({
   },
   data: function () {
     return {
-      title: "Home - Swatch",
+      title: "Color Analysis and Palette Generation - Swatch",
       backgrounds: [
         "background_1.jpg",
         "background_2.jpg",

@@ -3,7 +3,7 @@
     <div class="backdrop">
       <div class="title-container">
         <img class="logo" src="@/assets/img/logo.png" />
-        <div class="subtitle">Color Analysis and Palette Generation</div>
+        <div class="subtitle">Image Palette Generation and Color Analysis</div>
       </div>
 
       <div class="text">
@@ -57,7 +57,7 @@ export default defineComponent({
   },
   data: function () {
     return {
-      title: "Color Analysis and Palette Generation - Swatch",
+      title: "Image Palette Generation and Color Analysis - Swatch",
       backgrounds: [
         "background_1.jpg",
         "background_2.jpg",

@@ -1,6 +1,6 @@
 # Swatch! 
 
-Swatch is a web application built with Vue.js that allows users to easily analyze the colors of an image. This app interacts with a [separate API](https://github.com/Kipwisp/swatch-api) to retrieve statistics for an image which then get displayed using D3.js charts that describe the color palette, color proportions, and value distributions. View the live app at [swatch.kipwisp.io](swatch.kipwisp.io)!
+Swatch is a web application built with Vue.js that allows users to easily analyze the colors of an image. This app interacts with a [separate API](https://github.com/Kipwisp/swatch-api) to retrieve statistics for an image which then get displayed using D3.js charts that describe the color palette, color proportions, and value distributions. View the live app at [swatch.kipwisp.io](https://swatch.kipwisp.io)!
 
 ![Home Screen](./media/main.jpg)
 ![Results Screen](./media/results.jpg)

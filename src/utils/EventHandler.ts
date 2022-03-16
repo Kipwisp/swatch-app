@@ -1,7 +1,12 @@
 import mitt from "mitt";
 
+export type ColorSelectEvent = {
+  pos: number[];
+  color: string;
+};
+
 export type Events = {
-  colorSelect: number[];
+  colorSelect: ColorSelectEvent;
 };
 
 const emitter = mitt<Events>();

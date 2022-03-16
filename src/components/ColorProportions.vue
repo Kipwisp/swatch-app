@@ -73,7 +73,7 @@ export default defineComponent({
       const showTooltip = (event: MouseEvent, d: Cluster) => {
         const point = event.target as SVGElement;
         d3.select(point).style("stroke", "white");
-        this.$emitter.emit("colorSelect", d.pos);
+        this.$emitter.emit("colorSelect", { pos: d.pos, color: d.hex });
         tooltip
           .transition()
           .duration(200)

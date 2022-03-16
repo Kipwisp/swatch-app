@@ -16,6 +16,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { ColorSelectEvent } from "@/utils/EventHandler";
 
 export default defineComponent({
   name: "PictureFrame",
@@ -49,7 +50,7 @@ export default defineComponent({
     }
 
     if (this.toolTip) {
-      this.$emitter.on("colorSelect", (event: number[]) => {
+      this.$emitter.on("colorSelect", (event: ColorSelectEvent) => {
         this.moveTooltip(event);
       });
     }
@@ -71,8 +72,8 @@ export default defineComponent({
 
       return dimensions;
     },
-    moveTooltip(pos: number[]) {
-      const [x, y] = pos;
+    moveTooltip(event: ColorSelectEvent) {
+      const [x, y] = event.pos;
       const hover = this.$refs.pixelhover as HTMLSpanElement;
       const rect = (this.$refs.img as HTMLDivElement).getBoundingClientRect();
       const max_size = 150;
@@ -82,8 +83,13 @@ export default defineComponent({
           ? rect.height / Math.min(max_size, this.height)
           : rect.width / Math.min(max_size, this.width);
 
+      hover.style.opacity = "1";
       hover.style.top = `${window.scrollY + rect.y + y * scale - 10}px`;
       hover.style.left = `${window.scrollX + rect.x + x * scale - 10}px`;
+      hover.style.backgroundColor = `#${event.color}`;
+      hover.animate([{ transform: "scale(0)" }, { transform: "scale(1)" }], {
+        duration: 100,
+      });
     },
   },
 });
@@ -111,13 +117,12 @@ export default defineComponent({
 }
 .pixel-hover {
   position: absolute;
-  border-radius: 5px;
-  background-color: white;
-  border: 2px black solid;
+  border-radius: 25px;
+  border: 3px white solid;
   pointer-events: none;
-  width: 20px;
-  height: 20px;
-  opacity: 0.4;
+  width: 25px;
+  height: 25px;
   z-index: 1;
+  opacity: 0;
 }
 </style>

@@ -4,7 +4,7 @@
       <template v-for="item in colorNames" :key="item">
         <a :href="'https://www.color-hex.com/color/' + item.hex" target="_blank"
           ><div
-            @mouseenter="() => onHover(item.pos)"
+            @mouseenter="() => onHover(item.pos, item.hex)"
             class="color"
             :style="{ 'background-color': `#${item.hex}` }"
           >
@@ -43,8 +43,9 @@ export default defineComponent({
     },
   },
   methods: {
-    onHover(pos: number[]) {
-      this.$emitter.emit("colorSelect", pos);
+    onHover(pos: number[], color: string) {
+      const event = { pos, color };
+      this.$emitter.emit("colorSelect", event);
     },
   },
 });

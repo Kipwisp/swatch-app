@@ -1,29 +1,24 @@
-# color-app
+# Swatch! 
 
-## Project setup
+Swatch is a web application that allows users to easily analyze the colors of an image. This app interacts with a [separate API](https://github.com/Kipwisp/swatch-api) to retrieve statistics about an image and display D3 charts describing the color palette, color proportions, and value distributions.
+
+## Project Setup
+To set up the project, run the following command:
 ```
 yarn install
 ```
 
-### Compiles and hot-reloads for development
+## Compiling for Development
+To compile for development, run the following command:
 ```
 yarn serve
 ```
 
-### Compiles and minifies for production
+## Building for Production
+To build for production, run the following command:
 ```
 yarn build
 ```
 
-### Run your unit tests
-```
-yarn test:unit
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Licensing
+This project is licensed under the GNU GPLv3 - see [LICENSE](https://raw.githubusercontent.com/Kipwisp/swatch-app/main/LICENSE?token=GHSAT0AAAAAABSOHVBSAZGEQ7R3JJHDCUSGYRRM2RQ) for details.

@@ -33,6 +33,10 @@ export default defineComponent({
   },
   watch: {
     data: function () {
+      if (this.toolTip) {
+        const hover = this.$refs.pixelhover as HTMLSpanElement;
+        hover.style.opacity = "0";
+      }
       if (this.data) {
         this.loadImage(this.data).then((dimensions: number[]) => {
           this.width = dimensions[0];

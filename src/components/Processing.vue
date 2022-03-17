@@ -26,11 +26,12 @@ $speed: 5s;
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-bottom: 5%;
 }
 .loader-text {
   font-size: 2em;
   animation: fade $speed ease infinite alternate;
-  padding-top: 50px;
+  padding-top: min(10%, 50px);
 }
 .dots {
   display: flex;

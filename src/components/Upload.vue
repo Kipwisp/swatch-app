@@ -149,7 +149,7 @@ export default defineComponent({
   height: 100%;
 }
 .link-bar {
-  margin-top: min(20px, 2%);
+  margin-top: min(20px, 5%);
 }
 .container {
   width: 100%;

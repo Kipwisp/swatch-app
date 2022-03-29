@@ -16,7 +16,8 @@ yarn install
 ## Environmental Variables
 Add the following variables to your .env file:
 ```
-VUE_APP_API_URL=[url_to_api]
+VUE_APP_API=[url_to_api]
+VUE_APP_GITHUB=[url_to_github]
 ```
 
 ## Compiling for Development

@@ -58,7 +58,7 @@ export default defineComponent({
   },
   methods: {
     async uploadFile(file: File) {
-      const apiURL = process.env.VUE_APP_API_URL;
+      const apiURL = process.env.VUE_APP_API;
 
       try {
         this.uploading = true;

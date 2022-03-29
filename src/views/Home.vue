@@ -22,6 +22,11 @@
           }
         "
       />
+      <div class="social-media">
+        <a :href="getGithub">
+          <img class="social-icon" src="@/assets/img/github.png" />
+        </a>
+      </div>
     </div>
     <div
       :style="{ 'background-image': selectedBackground }"
@@ -72,6 +77,9 @@ export default defineComponent({
         this.backgrounds[Math.floor(Math.random() * this.backgrounds.length)];
 
       return `url(${require(`@/assets/img/${selected}`)})`;
+    },
+    getGithub(): string {
+      return process.env.VUE_APP_GITHUB;
     },
   },
   mounted() {
@@ -144,6 +152,18 @@ export default defineComponent({
   color: var(--text-light);
   width: min(500px, 90%);
   margin-bottom: 20px;
+}
+.social-media {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: var(--modal-bg);
+  padding: 10px;
+  border-radius: 0px 0px 25px 0px;
+}
+.social-icon {
+  width: 32px;
+  height: 32px;
 }
 @keyframes fade-in {
   from {

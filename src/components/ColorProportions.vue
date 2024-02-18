@@ -80,7 +80,7 @@ export default defineComponent({
           .style("opacity", 1)
           .style("visibility", "visible");
         tooltip.html(
-          `<div>Hex: #${d.hex}</div><div>RGB: ${d.rgb}</div><div>HSV: ${d.hsv}</div><div>Size: ${d.count}</div>`
+          `<div>Hex: #${d.hex}</div><div>RGB: ${d.rgb}</div><div>HSV: ${d.hsv}</div><div>Size: ${d.count}</div>`,
         );
       };
       const moveTooltip = (event: MouseEvent) => {
@@ -109,10 +109,14 @@ export default defineComponent({
         .append("g")
         .attr(
           "transform",
-          "translate(" + (size + padding) / 2 + "," + (size + padding) / 2 + ")"
+          "translate(" +
+            (size + padding) / 2 +
+            "," +
+            (size + padding) / 2 +
+            ")",
         );
 
-      var angleAxis = svg
+      const angleAxis = svg
         .append("g")
         .attr("class", "axis")
         .selectAll("g")

@@ -136,6 +136,7 @@ export default defineComponent({
 .logo {
   width: min(300px, 35vh);
   height: auto;
+  caret-color: transparent;
 }
 .title-container {
   display: flex;
